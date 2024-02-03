@@ -17,6 +17,9 @@ coverage
 /cypress/videos/
 /cypress/screenshots/
 
+# generate proto js
+src/stores/grpc/**/*.ts
+
 # Editor directories and files
 .vscode/*
 !.vscode/extensions.json

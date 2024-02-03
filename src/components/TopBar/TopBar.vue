@@ -36,7 +36,7 @@ const hideSearchDropdown = () => {
         />
         <dl>
           <dt>
-            <span class="ml-3 text-sm text-white"> 贝吉塔 </span>
+            <span class="ml-3 text-sm text-white"> 贝吉塔综合管理平台 </span>
           </dt>
           <dd class="ml-3 text-xs text-warning pr-1">
             <!-- <img

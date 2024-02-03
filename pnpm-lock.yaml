@@ -8,6 +8,21 @@ dependencies:
   '@headlessui/vue':
     specifier: ^1.7.7
     version: 1.7.7(vue@3.2.45)
+  '@protobuf-ts/grpcweb-transport':
+    specifier: ^2.8.2
+    version: 2.8.2
+  '@protobuf-ts/plugin':
+    specifier: ^2.9.1
+    version: 2.9.1
+  '@protobuf-ts/protoc':
+    specifier: ^2.9.1
+    version: 2.9.1
+  '@protobuf-ts/runtime':
+    specifier: ^2.9.3
+    version: 2.9.3
+  '@protobuf-ts/runtime-rpc':
+    specifier: ^2.9.3
+    version: 2.9.3
   '@vue/reactivity':
     specifier: ^3.4.15
     version: 3.4.15
@@ -489,6 +504,46 @@ packages:
 
   /@popperjs/core@2.11.8:
     resolution: {integrity: sha512-P1st0aksCrn9sGZhp8GMYwBnQsbvAWsZAX44oXNNvLHGqAOcoVxmjZiohstwQ7SqKnbR47akdNi+uleWD8+g6A==}
+    dev: false
+
+  /@protobuf-ts/grpcweb-transport@2.8.2:
+    resolution: {integrity: sha512-VG7132dOcH7t4C95EUiirzV2RTolBxIBWGxPFmnbKwHuR1lcSWDUbZZ1FIC1C/qip5jK4qcw5R76YZfV7gf8Pw==}
+    dependencies:
+      '@protobuf-ts/runtime': 2.9.3
+      '@protobuf-ts/runtime-rpc': 2.9.3
+    dev: false
+
+  /@protobuf-ts/plugin-framework@2.9.3:
+    resolution: {integrity: sha512-iqdkhAu7fGPvBCVOoAEEFJ1/oaGIBoNIMgSv2WonTNJVHxv5FvvAfWFn6nG/eta34fHRZT38ZXTaYcMUkv8AiQ==}
+    dependencies:
+      '@protobuf-ts/runtime': 2.9.3
+      typescript: 3.9.10
+    dev: false
+
+  /@protobuf-ts/plugin@2.9.1:
+    resolution: {integrity: sha512-svkFSyFgTtaLdDFPGvd6cTu8qK5Nul5RizDCTcv0xWRzcPWtMiqbuCLKCv6E9gdpnAs3MPeQTnSABB2+NhfWBg==}
+    hasBin: true
+    dependencies:
+      '@protobuf-ts/plugin-framework': 2.9.3
+      '@protobuf-ts/protoc': 2.9.1
+      '@protobuf-ts/runtime': 2.9.3
+      '@protobuf-ts/runtime-rpc': 2.9.3
+      typescript: 3.9.10
+    dev: false
+
+  /@protobuf-ts/protoc@2.9.1:
+    resolution: {integrity: sha512-/q2iVDwVDijfZlFZnnm3W6ALbybNskNSww88TfYBaJH49PuQMqhcXUPRu28UouJr9sc/Lr5k6t0TB9Nff3UIsA==}
+    hasBin: true
+    dev: false
+
+  /@protobuf-ts/runtime-rpc@2.9.3:
+    resolution: {integrity: sha512-WelHpctvZeG8yhbb7tnsrLzotq9xjMCXuGuhJ8qMyEdNoBBEodbXseofAYFTebo2/PN2LzyEq3X6vwr5f8jqTA==}
+    dependencies:
+      '@protobuf-ts/runtime': 2.9.3
+    dev: false
+
+  /@protobuf-ts/runtime@2.9.3:
+    resolution: {integrity: sha512-nivzCpg/qYD0RX2OmHOahJALb8ndjGmUhNBcTJ0BbXoqKwCSM6vYA+vegzS3rhuaPgbyC7Ec8idlnizzUfIRuw==}
     dev: false
 
   /@rushstack/eslint-patch@1.1.4:
@@ -3313,6 +3368,12 @@ packages:
       for-each: 0.3.3
       is-typed-array: 1.1.13
     dev: true
+
+  /typescript@3.9.10:
+    resolution: {integrity: sha512-w6fIxVE/H1PkLKcCPsFqKE7Kv7QUwhU8qQY2MueZXWx5cPZdwFupLgKK3vntcK98BtNHZtAF4LA/yl2a7k8R6Q==}
+    engines: {node: '>=4.2.0'}
+    hasBin: true
+    dev: false
 
   /typescript@4.7.4:
     resolution: {integrity: sha512-C0WQT0gezHuw6AdY1M2jxUO83Rjf0HP7Sk1DtXj6j1EwkQNZrHAg2XPWlq62oqEhYvONq5pkC2Y9oPljWToLmQ==}

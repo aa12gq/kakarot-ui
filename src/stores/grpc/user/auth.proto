@@ -1,0 +1,75 @@
+syntax = "proto3";
+
+package com.kakarot.user.grpc.v1;
+
+import "protoc-gen-openapiv2/options/annotations.proto";
+import "google/api/annotations.proto";
+
+option go_package = "go-kakarot/proto/auth/v1;v1";
+option java_multiple_files = true;
+option java_package = "proto.auth.v1";
+
+option (.grpc.gateway.protoc_gen_openapiv2.options.openapiv2_swagger) = {
+  info: {
+    title: "身份认证系统";
+    version: "1.0.0";
+    description: "用户登录、信息管理、权限管理等";
+    contact: {
+      name: "AA12GQ";
+      url: "https://github.com/AA12GQ/";
+    };
+  };
+  schemes: [HTTP, HTTPS];
+  consumes: "application/json";
+  produces: "application/json";
+};
+
+message LoginRequest {
+  string account = 2;
+  string password = 3;
+}
+message LoginReply {
+  uint64 uid = 1;
+  string jwt = 2;
+}
+
+message LoginByPhoneRequest {
+  string phone = 2;
+  string code = 3;
+}
+message LoginByPhoneReply {
+  uint64 uid = 1;
+  string jwt = 2;
+}
+
+message RenewTokenRequest {
+}
+message RenewTokenReply {
+  // 新签发的token
+  string jwt = 1;
+}
+
+// 身份认证系统
+service Auth {
+  // 登录,并签发jwt
+  rpc Login(LoginRequest) returns (LoginReply) {
+    option (google.api.http) = {
+      post: "/v1/auth/user/login"
+      body: "*"
+    };
+  }
+  // 手机验证码登录,并签发jwt
+  rpc LoginByPhone(LoginByPhoneRequest) returns (LoginByPhoneReply) {
+    option (google.api.http) = {
+      post: "/v1/auth/user/login_by_phone"
+      body: "*"
+    };
+  }
+  // 更新jwt
+  rpc RenewToken(RenewTokenRequest)returns(RenewTokenReply){
+    option (google.api.http) = {
+      post: "/v1/auth/renew-token"
+      body: "*"
+    };
+  }
+}
