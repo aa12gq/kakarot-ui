@@ -4,7 +4,7 @@
   "private": true,
   "license": "kakarot Proprietary",
   "scripts": {
-    "dev": "vite",
+    "dev": "vite --host 0.0.0.0 --mode development",
     "build": "run-p type-check build-only",
     "build:grpc": "./compile-grpc.sh",
     "preview": "vite preview",
