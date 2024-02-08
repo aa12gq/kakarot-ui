@@ -93,7 +93,6 @@ const [formattedMenu, setFormattedMenu] = props.formattedMenuState;
       ]"
     >
       {{ props.menu.title }}
-
       <div
         v-if="props.menu.subMenu"
         :class="[
