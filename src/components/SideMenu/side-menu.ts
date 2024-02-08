@@ -90,4 +90,30 @@ const leave = (el: HTMLElement) => {
   slideUp(el, 300);
 };
 
-export { nestedMenu, linkTo, enter, leave };
+/**
+ * 清空menus1中的菜单，并用menus2中的菜单填充menus1.
+ * @param menus1
+ * @param menus2
+ * @param keepMenuState 是否保持menus1中单展开状态
+ */
+const assignMenus = (menus1:Array<FormattedMenu|"devider">, menus2:Array<FormattedMenu|"devider">, keepMenuState?:Boolean) => {
+  let _om = menus1.splice(0, menus1.length);
+  if(!keepMenuState){
+    Object.assign(menus1, menus2)
+  } else {
+    for(let i = 0; i < menus2.length; i++){
+      if(typeof menus2[i] == "object" &&  typeof _om[i] == "object"){
+        let nm = (menus2[i] as FormattedMenu);
+        let om = (_om[i] as FormattedMenu);
+        nm.activeDropdown = om.activeDropdown;
+        if(nm.subMenu && om.subMenu){
+          console.log(nm.subMenu, nm.title);
+          assignMenus(om.subMenu, nm.subMenu, keepMenuState);
+        }
+      }
+    }
+    Object.assign(menus1, menus2);
+  }
+
+}
+export { nestedMenu, linkTo, enter, leave, assignMenus };

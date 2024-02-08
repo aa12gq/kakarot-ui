@@ -3,7 +3,7 @@ import Devider from "@/components/SideMenu/Devider.vue";
 import Menu from "@/components/SideMenu/Menu.vue";
 import {useSideMenuStore} from "@/stores/side-menu";
 import type {FormattedMenu} from "@/components/SideMenu/side-menu";
-import {enter, leave, nestedMenu} from "@/components/SideMenu/side-menu";
+import {enter, leave, nestedMenu, assignMenus} from "@/components/SideMenu/side-menu";
 import {computed, onMounted, reactive, watch} from "vue";
 import {useRoute} from "vue-router";
 
@@ -18,16 +18,13 @@ let formattedMenu = reactive<Array<FormattedMenu | "devider">>([]);
 const setFormattedMenu = (
     computedFormattedMenu: Array<FormattedMenu | "devider">
 ) => {
-  Object.assign(formattedMenu, computedFormattedMenu);
+  assignMenus(formattedMenu, computedFormattedMenu, props.keepMenuState);
 };
 const sideMenuStore = useSideMenuStore();
 const sideMenu = computed(() => nestedMenu(sideMenuStore.menu, route));
 
 watch(sideMenu, () => {
-  console.log(props.keepMenuState);
-  if(!props.keepMenuState) {
     setFormattedMenu(sideMenu.value);
-  }
 });
 
 onMounted(() => {
