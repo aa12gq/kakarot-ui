@@ -47,6 +47,7 @@ export const useSideMenuStore = defineStore("sideMenu", {
               {
                 icon: "AlterPlan",
                 title: "账号注册",
+                pageName: "wscc-scan_task",
               },
             ],
           },
