@@ -7,7 +7,7 @@ export default {
 <script setup lang="ts">
 import _ from "lodash";
 import { twMerge } from "tailwind-merge";
-import { withDefaults, computed, HTMLAttributes, useAttrs, provide } from "vue";
+import { withDefaults, computed, type HTMLAttributes, useAttrs, provide } from "vue";
 
 export type ProvideThead = {
   variant?: "default" | "light" | "dark";

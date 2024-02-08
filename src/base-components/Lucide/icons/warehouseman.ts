@@ -1,33 +1,6 @@
 import createVueComponent from '../createVueComponent';
 
 const Warehouseman = createVueComponent('WarehousemanIcon', [
-  ['metadata', { id: 'metadata2011', key: '10remp' }],
-  ['defs', { id: 'defs2009', key: '181x1b' }],
-  [
-    'sodipodi:namedview',
-    {
-      pagecolor: '#ffffff',
-      bordercolor: '#666666',
-      borderopacity: '1',
-      objecttolerance: '10',
-      gridtolerance: '10',
-      guidetolerance: '10',
-      'inkscape:pageopacity': '0',
-      'inkscape:pageshadow': '2',
-      'inkscape:window-width': '1920',
-      'inkscape:window-height': '1027',
-      id: 'namedview2007',
-      showgrid: 'false',
-      'inkscape:zoom': '20.182676',
-      'inkscape:cx': '24',
-      'inkscape:cy': '16.969999',
-      'inkscape:window-x': '0',
-      'inkscape:window-y': '25',
-      'inkscape:window-maximized': '0',
-      'inkscape:current-layer': 'svg2005',
-      key: '1lf4p5',
-    },
-  ],
   [
     'path',
     {

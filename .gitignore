@@ -20,6 +20,11 @@ coverage
 # generate proto js
 src/stores/grpc/**/*.ts
 
+yarn.lock
+
+# env
+.env
+
 # Editor directories and files
 .vscode/*
 !.vscode/extensions.json

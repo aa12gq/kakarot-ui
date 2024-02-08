@@ -15,7 +15,7 @@ const props = withDefaults(defineProps<ProviderProps>(), {
 });
 
 provide<ProvideTab>("tab", {
-  selected: computed(() => props.selected),
+  selected: computed(() => props.selected) as any,
 });
 </script>
 

@@ -1,21 +1,19 @@
 <script setup lang="ts">
-import { useRoute } from "vue-router";
-import Devider from "@/components/SideMenu/Devider.vue";
-import Menu from "@/components/SideMenu/Menu.vue";
-import TopBar from "@/components/TopBar";
-import DarkModeSwitcher from "@/components/DarkModeSwitcher";
-import MainColorSwitcher from "@/components/MainColorSwitcher";
-import MobileMenu from "@/components/MobileMenu";
-import { useSideMenuStore } from "@/stores/side-menu";
-import type { FormattedMenu } from "@/components/SideMenu/side-menu";
-import { enter, leave, nestedMenu } from "@/components/SideMenu/side-menu";
-import { computed, onMounted, reactive, watch } from "vue";
+import { useRoute } from 'vue-router';
+import Devider from '@/components/SideMenu/Devider.vue';
+import Menu from '@/components/SideMenu/Menu.vue';
+import TopBar from '@/components/TopBar';
+import DarkModeSwitcher from '@/components/DarkModeSwitcher';
+import MainColorSwitcher from '@/components/MainColorSwitcher';
+import MobileMenu from '@/components/MobileMenu';
+import { useSideMenuStore } from '@/stores/side-menu';
+import type { FormattedMenu } from '@/components/SideMenu/side-menu';
+import { enter, leave, nestedMenu } from '@/components/SideMenu/side-menu';
+import { computed, onMounted, reactive, watch } from 'vue';
 
 const route = useRoute();
-let formattedMenu = reactive<Array<FormattedMenu | "devider">>([]);
-const setFormattedMenu = (
-  computedFormattedMenu: Array<FormattedMenu | "devider">
-) => {
+let formattedMenu = reactive<Array<FormattedMenu | 'devider'>>([]);
+const setFormattedMenu = (computedFormattedMenu: Array<FormattedMenu | 'devider'>) => {
   Object.assign(formattedMenu, computedFormattedMenu);
 };
 const sideMenuStore = useSideMenuStore();
@@ -30,9 +28,7 @@ onMounted(() => {
 });
 </script>
 <template>
-  <div
-    class="pt-2 pb-7 before:content-[''] before:absolute before:inset-0 before:bg-fixed before:bg-no-repeat before:bg-skew-pattern dark:before:bg-skew-pattern-dark"
-  >
+  <div class="pt-2 pb-7 before:content-[''] before:absolute before:inset-0 before:bg-fixed before:bg-no-repeat before:bg-skew-pattern dark:before:bg-skew-pattern-dark">
     <DarkModeSwitcher />
     <MainColorSwitcher />
     <MobileMenu />
@@ -56,9 +52,7 @@ onMounted(() => {
         ]"
       >
         <!-- BEGIN: Side Menu -->
-        <nav
-          class="hidden md:block w-[105px] xl:w-[250px] px-5 pt-8 pb-16 overflow-x-hidden"
-        >
+        <nav class="hidden md:block w-[105px] xl:w-[250px] px-5 pt-8 pb-16 overflow-x-hidden">
           <ul>
             <!-- BEGIN: First Child -->
             <template v-for="(menu, menuKey) in formattedMenu">
@@ -69,9 +63,7 @@ onMounted(() => {
                   'my-6',
 
                   // Animation
-                  `opacity-0 animate-[0.4s_ease-in-out_0.1s_intro-devider] animate-fill-mode-forwards animate-delay-${
-                    (menuKey + 1) * 10
-                  }`,
+                  `opacity-0 animate-[0.4s_ease-in-out_0.1s_intro-devider] animate-fill-mode-forwards animate-delay-${(menuKey + 1) * 10}`,
                 ]"
                 :key="'devider-' + menuKey"
               ></Devider>
@@ -79,9 +71,7 @@ onMounted(() => {
                 <Menu
                   :class="{
                     // Animation
-                    [`opacity-0 translate-x-[50px] animate-[0.4s_ease-in-out_0.1s_intro-menu] animate-fill-mode-forwards animate-delay-${
-                      (menuKey + 1) * 10
-                    }`]: !menu.active,
+                    [`opacity-0 translate-x-[50px] animate-[0.4s_ease-in-out_0.1s_intro-menu] animate-fill-mode-forwards animate-delay-${(menuKey + 1) * 10}`]: !menu.active,
                   }"
                   :menu="menu"
                   :formattedMenuState="[formattedMenu, setFormattedMenu]"
@@ -100,24 +90,15 @@ onMounted(() => {
                       { hidden: !menu.activeDropdown },
                     ]"
                   >
-                    <li
-                      v-for="(subMenu, subMenuKey) in menu.subMenu"
-                      :key="subMenuKey"
-                    >
+                    <li v-for="(subMenu, subMenuKey) in menu.subMenu" :key="subMenuKey">
                       <Menu
-                        :class="`opacity-0 translate-x-[50px] animate-[0.4s_ease-in-out_0.1s_intro-menu] animate-fill-mode-forwards animate-delay-${
-                          (subMenuKey + 1) * 10
-                        }`"
+                        :class="`opacity-0 translate-x-[50px] animate-[0.4s_ease-in-out_0.1s_intro-menu] animate-fill-mode-forwards animate-delay-${(subMenuKey + 1) * 10}`"
                         :menu="subMenu"
                         :formattedMenuState="[formattedMenu, setFormattedMenu]"
                         level="second"
                       ></Menu>
                       <!-- BEGIN: Third Child -->
-                      <Transition
-                        @enter="enter"
-                        @leave="leave"
-                        v-if="subMenu.subMenu"
-                      >
+                      <Transition @enter="enter" @leave="leave" v-if="subMenu.subMenu">
                         <ul
                           v-if="subMenu.subMenu && subMenu.activeDropdown"
                           :class="[
@@ -129,34 +110,17 @@ onMounted(() => {
                             { hidden: !subMenu.activeDropdown },
                           ]"
                         >
-                          <li
-                            v-for="(
-                              thirdSubMenu, thirdSubMenuKey
-                            ) in subMenu.subMenu"
-                            :key="thirdSubMenuKey"
-                          >
+                          <li v-for="(thirdSubMenu, thirdSubMenuKey) in subMenu.subMenu" :key="thirdSubMenuKey">
                             <Menu
-                              :class="`opacity-0 translate-x-[50px] animate-[0.4s_ease-in-out_0.1s_intro-menu] animate-fill-mode-forwards animate-delay-${
-                                (thirdSubMenuKey + 1) * 10
-                              }`"
+                              :class="`opacity-0 translate-x-[50px] animate-[0.4s_ease-in-out_0.1s_intro-menu] animate-fill-mode-forwards animate-delay-${(thirdSubMenuKey + 1) * 10}`"
                               :menu="thirdSubMenu"
-                              :formattedMenuState="[
-                                formattedMenu,
-                                setFormattedMenu,
-                              ]"
+                              :formattedMenuState="[formattedMenu, setFormattedMenu]"
                               level="third"
                             ></Menu>
                             <!-- BEGIN: Fourth Child -->
-                            <Transition
-                              @enter="enter"
-                              @leave="leave"
-                              v-if="thirdSubMenu.subMenu"
-                            >
+                            <Transition @enter="enter" @leave="leave" v-if="thirdSubMenu.subMenu">
                               <ul
-                                v-if="
-                                  thirdSubMenu.subMenu &&
-                                  thirdSubMenu.activeDropdown
-                                "
+                                v-if="thirdSubMenu.subMenu && thirdSubMenu.activeDropdown"
                                 :class="[
                                   'bg-white/[0.04] rounded-lg relative dark:bg-transparent',
                                   'before:content-[\'\'] before:block before:inset-0 before:bg-primary/60 before:rounded-lg before:absolute before:z-[-1] before:dark:bg-darkmode-900/30',
@@ -166,21 +130,11 @@ onMounted(() => {
                                   { hidden: !thirdSubMenu.activeDropdown },
                                 ]"
                               >
-                                <li
-                                  v-for="(
-                                    fourthSubMenu, fourthSubMenuKey
-                                  ) in thirdSubMenu.subMenu"
-                                  :key="fourthSubMenuKey"
-                                >
+                                <li v-for="(fourthSubMenu, fourthSubMenuKey) in thirdSubMenu.subMenu" :key="fourthSubMenuKey">
                                   <Menu
-                                    :class="`opacity-0 translate-x-[50px] animate-[0.4s_ease-in-out_0.1s_intro-menu] animate-fill-mode-forwards animate-delay-${
-                                      (fourthSubMenuKey + 1) * 10
-                                    }`"
+                                    :class="`opacity-0 translate-x-[50px] animate-[0.4s_ease-in-out_0.1s_intro-menu] animate-fill-mode-forwards animate-delay-${(fourthSubMenuKey + 1) * 10}`"
                                     :menu="fourthSubMenu"
-                                    :formattedMenuState="[
-                                      formattedMenu,
-                                      setFormattedMenu,
-                                    ]"
+                                    :formattedMenuState="[formattedMenu, setFormattedMenu]"
                                     level="fourth"
                                   ></Menu>
                                 </li>

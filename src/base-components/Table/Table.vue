@@ -10,11 +10,10 @@ import { twMerge } from "tailwind-merge";
 import {
   withDefaults,
   computed,
-  TableHTMLAttributes,
+  type TableHTMLAttributes,
   useAttrs,
   provide,
 } from "vue";
-
 export type ProvideTable = {
   dark: boolean;
   bordered: boolean;

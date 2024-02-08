@@ -7,7 +7,7 @@ export default {
 <script setup lang="ts">
 import _ from "lodash";
 import { twMerge } from "tailwind-merge";
-import { withDefaults, computed, ButtonHTMLAttributes, useAttrs } from "vue";
+import { withDefaults, computed, type ButtonHTMLAttributes, useAttrs } from "vue";
 
 interface DismissButtonProps extends ButtonHTMLAttributes {
   as?: string | object;

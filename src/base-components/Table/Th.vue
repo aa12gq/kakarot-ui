@@ -8,8 +8,8 @@ export default {
 import _ from "lodash";
 import { twMerge } from "tailwind-merge";
 import { computed, useAttrs, inject } from "vue";
-import { ProvideTable } from "./Table.vue";
-import { ProvideThead } from "./Thead.vue";
+import type {ProvideTable} from "./Table.vue";
+import type {ProvideThead} from "./Thead.vue";
 
 const table = inject<ProvideTable>("table", {
   dark: false,

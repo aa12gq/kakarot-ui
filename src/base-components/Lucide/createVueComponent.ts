@@ -7,7 +7,6 @@ export interface SVGProps extends Partial<SVGAttributes> {
   size?: 24 | number
 }
 
-
 type IconNode = [elementName: string, attrs: Record<string, string>][]
 
 /**
