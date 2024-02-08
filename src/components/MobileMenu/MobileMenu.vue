@@ -116,7 +116,7 @@ onMounted(() => {
               :setActiveMobileMenu="setActiveMobileMenu"
             ></Menu>
             <!-- BEGIN: Second Child -->
-            <Transition @enter="enter" @leave="leave" v-if="menu.subMenu">
+            <Transition @enter="(enter as any)" @leave="(leave as any)" v-if="menu.subMenu">
               <ul
                 v-if="menu.subMenu && menu.activeDropdown"
                 :class="[
@@ -138,8 +138,8 @@ onMounted(() => {
                   ></Menu>
                   <!-- BEGIN: Third Child -->
                   <Transition
-                    @enter="enter"
-                    @leave="leave"
+                    @enter="(enter as any)"
+                    @leave="(leave as any)"
                     v-if="subMenu.subMenu"
                   >
                     <ul

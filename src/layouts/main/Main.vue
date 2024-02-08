@@ -78,7 +78,7 @@ onMounted(() => {
                   level="first"
                 ></Menu>
                 <!-- BEGIN: Second Child -->
-                <Transition @enter="enter" @leave="leave">
+                <Transition @enter="(enter as any)" @leave="(leave as any)">
                   <ul
                     v-if="menu.subMenu && menu.activeDropdown"
                     :class="[
@@ -98,7 +98,7 @@ onMounted(() => {
                         level="second"
                       ></Menu>
                       <!-- BEGIN: Third Child -->
-                      <Transition @enter="enter" @leave="leave" v-if="subMenu.subMenu">
+                      <Transition @enter="(enter as any)" @leave="(leave as any)" v-if="subMenu.subMenu">
                         <ul
                           v-if="subMenu.subMenu && subMenu.activeDropdown"
                           :class="[
@@ -118,7 +118,7 @@ onMounted(() => {
                               level="third"
                             ></Menu>
                             <!-- BEGIN: Fourth Child -->
-                            <Transition @enter="enter" @leave="leave" v-if="thirdSubMenu.subMenu">
+                            <Transition @enter="(enter as any)" @leave="(leave as any)" v-if="thirdSubMenu.subMenu">
                               <ul
                                 v-if="thirdSubMenu.subMenu && thirdSubMenu.activeDropdown"
                                 :class="[
