@@ -21,7 +21,7 @@ const attrs = useAttrs();
 
 const computedClass = computed(() =>
   twMerge([
-    "text-slate-800 py-2 px-3 absolute right-0 my-auto mr-2",
+    "text-slate-800 py-0 absolute top-1 right-0 my-auto mr-1",
     typeof attrs.class === "string" && attrs.class,
   ])
 );

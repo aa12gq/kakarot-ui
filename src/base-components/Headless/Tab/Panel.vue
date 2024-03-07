@@ -1,16 +1,19 @@
 <script setup lang="ts">
 import { TabPanel as HeadlessTabPanel, TransitionRoot } from "@headlessui/vue";
 import type {ExtractPropTypes} from "vue";
+import {onMounted, ref} from "vue";
 
 interface PanelProps extends ExtractPropTypes<typeof HeadlessTabPanel> {}
 
 defineProps<PanelProps>();
+const panel = ref(HeadlessTabPanel);
 </script>
 
 <template>
-  <HeadlessTabPanel as="template" v-slot="{ selected }">
+  <HeadlessTabPanel ref="panel"  as="template" v-slot="{ selected }">
     <TransitionRoot
       appear
+      :unmount="panel.unmount||false"
       as="div"
       :show="selected"
       enter="transition-opacity duration-300"

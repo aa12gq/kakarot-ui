@@ -18,10 +18,11 @@ import {
 import type { ProvideFormInline } from "./FormInline.vue";
 import type { ProvideInputGroup } from "./InputGroup/InputGroup.vue";
 
-interface FormInputProps extends InputHTMLAttributes {
+export interface FormInputProps extends InputHTMLAttributes {
   modelValue?: InputHTMLAttributes["value"];
   formInputSize?: "sm" | "lg";
   rounded?: boolean;
+  trim?: boolean;
 }
 
 interface FormInputEmit {
@@ -50,12 +51,23 @@ const computedClass = computed(() =>
   ])
 );
 
-const localValue = ref(props.modelValue);
+const localValue = ref<InputHTMLAttributes["value"]>(props.modelValue);
 const emit = defineEmits<FormInputEmit>();
 
 watch(localValue, () => {
   emit("update:modelValue", localValue.value);
 });
+
+watch(props, () => {
+  localValue.value = props.modelValue;
+},{deep: true});
+
+function changeHandler(e: any) {
+  if (props.trim) {
+    let value = e.target.value;
+    localValue.value = String(value).trim()
+  }
+}
 </script>
 
 <template>
@@ -64,5 +76,6 @@ watch(localValue, () => {
     :type="props.type"
     v-bind="_.omit(attrs, 'class')"
     v-model="localValue"
+    @change="changeHandler"
   />
 </template>

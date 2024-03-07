@@ -1,9 +1,8 @@
 <script setup lang="ts">
-import { useDarkModeStore } from "../../stores/dark-mode";
-import { computed } from "vue";
-
+import { useDarkModeStore } from "@/stores/dark-mode";
+import {isDarkMode} from "@/components/DarkModeSwitcher/types";
+import {computed} from "vue";
 const darkMode = computed(() => useDarkModeStore().darkMode);
-
 const setDarkModeClass = () => {
   const el = document.querySelectorAll("html")[0];
   darkMode.value ? el.classList.add("dark") : el.classList.remove("dark");
@@ -11,9 +10,9 @@ const setDarkModeClass = () => {
 
 const switchMode = () => {
   useDarkModeStore().setDarkMode(!darkMode.value);
+  isDarkMode.value = darkMode.value;
   setDarkModeClass();
 };
-
 setDarkModeClass();
 </script>
 

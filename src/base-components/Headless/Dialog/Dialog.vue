@@ -3,7 +3,7 @@ export default {
   inheritAttrs: false,
 };
 
-type Size = "sm" | "md" | "lg" | "xl";
+type Size = "sm" | "md" | "lg" | "xl" | "4xl";
 </script>
 
 <script setup lang="ts">
@@ -22,12 +22,14 @@ interface DialogProps extends ExtractProps<typeof HeadlessDialog> {
   size?: Size;
   open: boolean;
   staticBackdrop?: boolean;
+  unmount?: boolean;
 }
 
 const props = withDefaults(defineProps<DialogProps>(), {
   as: "div",
   open: false,
   size: "md",
+  unmount: true,
 });
 
 const { as, onClose, staticBackdrop, size } = props;
@@ -54,7 +56,6 @@ const handleClose = (value: boolean) => {
     }, 300);
   }
 };
-
 provide<ProvideDialog>("dialog", {
   open: open.value,
   zoom: zoom,
@@ -63,7 +64,7 @@ provide<ProvideDialog>("dialog", {
 </script>
 
 <template>
-  <TransitionRoot appear as="template" :show="open">
+  <TransitionRoot appear as="template" :show="open" :unmount="unmount">
     <HeadlessDialog
       :as="as"
       @close="
@@ -73,6 +74,8 @@ provide<ProvideDialog>("dialog", {
       "
       :class="computedClass"
       v-bind="_.omit(attrs, 'class', 'onClose')"
+      :unmount="unmount"
+      :useInert="false"
     >
       <slot></slot>
     </HeadlessDialog>

@@ -33,7 +33,7 @@ const computedClass = computed(() => [
     !breadcrumb.light &&
     active &&
     "text-slate-800 cursor-text dark:text-slate-400",
-  breadcrumb && breadcrumb.light && active && "text-white/70",
+  breadcrumb && breadcrumb.light && active && "text-white/30",
 ]);
 </script>
 

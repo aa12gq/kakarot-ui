@@ -1,7 +1,9 @@
 <script setup lang="ts">
 import * as icons from "./icons"
 import type { SVGAttributes } from "vue";
-export type Icon = keyof typeof icons;
+import {defineProps} from "vue"
+import type {Icon} from "./types";
+
 interface LucideProps extends SVGAttributes {
   icon: Icon;
   title?: string;

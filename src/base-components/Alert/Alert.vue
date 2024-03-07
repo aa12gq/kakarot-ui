@@ -1,57 +1,47 @@
-<script lang="ts">
-export default {
-  inheritAttrs: false,
-};
-</script>
-
 <script setup lang="ts">
 import _ from "lodash";
-import { twMerge } from "tailwind-merge";
-import { TransitionRoot } from "@headlessui/vue";
-import { withDefaults, computed, ref, type HTMLAttributes, useAttrs } from "vue";
+import {twMerge} from "tailwind-merge";
+import {TransitionRoot} from "@headlessui/vue";
+import {withDefaults, computed, ref, type HTMLAttributes, useAttrs, onMounted} from "vue";
+import type {Variant} from "@/base-components/Alert/Types";
 
-type Variant =
-  | "primary"
-  | "secondary"
-  | "success"
-  | "warning"
-  | "pending"
-  | "danger"
-  | "dark"
-  | "outline-primary"
-  | "outline-secondary"
-  | "outline-success"
-  | "outline-warning"
-  | "outline-pending"
-  | "outline-danger"
-  | "outline-dark"
-  | "soft-primary"
-  | "soft-secondary"
-  | "soft-success"
-  | "soft-warning"
-  | "soft-pending"
-  | "soft-danger"
-  | "soft-dark";
+const show = ref<boolean>(true);
 
 interface AlertProps extends HTMLAttributes {
   as?: string | object;
   dismissible?: boolean;
   variant?: Variant;
-  onShow?: () => {};
-  onShown?: () => {};
-  onHide?: () => {};
-  onHidden?: () => {};
+  onShow?: () => void;
+  onShown?: () => void;
+  onHide?: () => void;
+  onHidden?: () => void;
+  // autoDismiss秒后自动删除提示.
+  autoDismiss?: number;
 }
 
-const { as, dismissible, variant, ...props } = withDefaults(
-  defineProps<AlertProps>(),
-  {
-    as: "div",
-  }
+const {as, dismissible, variant, ...props} = withDefaults(
+    defineProps<AlertProps>(),
+    {
+      as: "div"
+    }
 );
 
+onMounted(()=>{
+  if(props.autoDismiss && props.autoDismiss > 0){
+    setTimeout(()=>{
+      dismiss()
+        },
+        props.autoDismiss
+    )
+  }
+})
+
+const dismissEmit = defineEmits(["dismiss"]);
+const dismiss = ()=>{
+  show.value = false;
+  dismissEmit("dismiss");
+}
 const attrs = useAttrs();
-const show = ref<boolean>(true);
 
 // Main Colors
 const primary = [
@@ -144,58 +134,55 @@ const softDark = [
 ];
 
 const computedClass = computed(() =>
-  twMerge([
-    "relative border rounded-md px-5 py-4",
-    variant == "primary" && primary,
-    variant == "secondary" && secondary,
-    variant == "success" && success,
-    variant == "warning" && warning,
-    variant == "pending" && pending,
-    variant == "danger" && danger,
-    variant == "dark" && dark,
-    variant == "outline-primary" && outlinePrimary,
-    variant == "outline-secondary" && outlineSecondary,
-    variant == "outline-success" && outlineSuccess,
-    variant == "outline-warning" && outlineWarning,
-    variant == "outline-pending" && outlinePending,
-    variant == "outline-danger" && outlineDanger,
-    variant == "outline-dark" && outlineDark,
-    variant == "soft-primary" && softPrimary,
-    variant == "soft-secondary" && softSecondary,
-    variant == "soft-success" && softSuccess,
-    variant == "soft-warning" && softWarning,
-    variant == "soft-pending" && softPending,
-    variant == "soft-danger" && softDanger,
-    variant == "soft-dark" && softDark,
-    dismissible && "pl-5 pr-16",
-    typeof attrs.class === "string" && attrs.class,
-  ])
+    twMerge([
+      "relative border rounded-md px-5 py-4",
+      variant == "primary" && primary,
+      variant == "secondary" && secondary,
+      variant == "success" && success,
+      variant == "warning" && warning,
+      variant == "pending" && pending,
+      variant == "danger" && danger,
+      variant == "dark" && dark,
+      variant == "outline-primary" && outlinePrimary,
+      variant == "outline-secondary" && outlineSecondary,
+      variant == "outline-success" && outlineSuccess,
+      variant == "outline-warning" && outlineWarning,
+      variant == "outline-pending" && outlinePending,
+      variant == "outline-danger" && outlineDanger,
+      variant == "outline-dark" && outlineDark,
+      variant == "soft-primary" && softPrimary,
+      variant == "soft-secondary" && softSecondary,
+      variant == "soft-success" && softSuccess,
+      variant == "soft-warning" && softWarning,
+      variant == "soft-pending" && softPending,
+      variant == "soft-danger" && softDanger,
+      variant == "soft-dark" && softDark,
+      dismissible && "pl-5 pr-16",
+      typeof attrs.class === "string" && attrs.class,
+    ])
 );
 </script>
 
 <template>
   <TransitionRoot
-    as="template"
-    :show="show"
-    enter="transition-all ease-linear duration-150"
-    enterFrom="invisible opacity-0 translate-y-1"
-    enterTo="visible opacity-100 translate-y-0"
-    leave="transition-all ease-linear duration-150"
-    leaveFrom="visible opacity-100 translate-y-0"
-    leaveTo="invisible opacity-0 translate-y-1"
+      as="template"
+      :show="show"
+      enter="transition-all ease-linear duration-[800ms]"
+      enterFrom="invisible opacity-0 translate-y-1"
+      enterTo="visible opacity-100 translate-y-0"
+      leave="transition-all ease-linear duration-[800ms]"
+      leaveFrom="visible opacity-100 translate-y-0"
+      leaveTo="invisible opacity-0 translate-y-1"
   >
     <component
-      :is="as"
-      role="alert"
-      :class="computedClass"
-      v-bind="_.omit(attrs, 'class')"
+        :is="as"
+        role="alert"
+        :onShown="dismiss"
+        :class="computedClass"
+        v-bind="_.omit(attrs, 'class')"
     >
       <slot
-        :dismiss="
-          () => {
-            show = false;
-          }
-        "
+          :dismiss="dismiss"
       ></slot>
     </component>
   </TransitionRoot>

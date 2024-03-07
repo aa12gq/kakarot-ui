@@ -57,6 +57,9 @@ const emit = defineEmits<FormTextareaEmit>();
 watch(localValue, () => {
   emit("update:modelValue", localValue.value);
 });
+watch(props, () => {
+  localValue.value = props.modelValue;
+},{deep: true});
 </script>
 
 <template>

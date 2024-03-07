@@ -1,7 +1,5 @@
 <script setup lang="ts">
-import { computed } from "@vue/reactivity";
-import { provide } from "vue";
-import type { ComputedRef } from "vue";
+import { ComputedRef, computed, provide } from "vue";
 
 export type ProvideDisclosure = ComputedRef<{
   open: boolean;
@@ -29,7 +27,7 @@ provide<ProvideDisclosure>(
       close: props.close,
       index: props.index,
     };
-  }) as any
+  })
 );
 </script>
 

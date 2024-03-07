@@ -17,7 +17,7 @@ import {
 } from "vue";
 import type { ProvideFormInline } from "./FormInline.vue";
 
-interface FormSelectProps extends SelectHTMLAttributes {
+export interface FormSelectProps extends SelectHTMLAttributes {
   modelValue?: SelectHTMLAttributes["value"];
   formSelectSize?: "sm" | "lg";
 }
@@ -49,7 +49,11 @@ const emit = defineEmits<FormSelectEmit>();
 
 watch(localValue, () => {
   emit("update:modelValue", localValue.value);
-});
+},{deep: true});
+
+watch(props, () => {
+  localValue.value = props.modelValue;
+},{deep: true,immediate: true});
 </script>
 
 <template>

@@ -1,4 +1,4 @@
-import Slideover from "./Slideover.vue";
+import Slideover, {type Size} from "./Slideover.vue";
 import Description from "./Description.vue";
 import Footer from "./Footer.vue";
 import Panel from "./Panel.vue";
@@ -10,5 +10,5 @@ const SlideoverComponent = Object.assign({}, Slideover, {
   Panel: Panel,
   Title: Title,
 });
-
 export default SlideoverComponent;
+export {Size}

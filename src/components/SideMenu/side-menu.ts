@@ -107,7 +107,6 @@ const assignMenus = (menus1:Array<FormattedMenu|"devider">, menus2:Array<Formatt
         let om = (_om[i] as FormattedMenu);
         nm.activeDropdown = om.activeDropdown;
         if(nm.subMenu && om.subMenu){
-          console.log(nm.subMenu, nm.title);
           assignMenus(om.subMenu, nm.subMenu, keepMenuState);
         }
       }

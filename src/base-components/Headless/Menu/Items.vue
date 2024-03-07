@@ -47,13 +47,13 @@ const computedClass = computed(() =>
 <template>
   <TransitionRoot
     as="template"
-    enter="transition-all ease-linear duration-150"
-    enterFrom="mt-5 invisible opacity-0 translate-y-1"
+    enter="transition-all ease-linear duration-[200ms]"
+    enterFrom="-mt-10 invisible opacity-0 translate-y-1"
     enterTo="mt-1 visible opacity-100 translate-y-0"
     entered="mt-1"
-    leave="transition-all ease-linear duration-150"
+    leave="transition-all ease-linear duration-[200ms]"
     leaveFrom="mt-1 visible opacity-100 translate-y-0"
-    leaveTo="mt-5 invisible opacity-0 translate-y-1"
+    leaveTo="-mt-5 invisible opacity-0 translate-y-1"
   >
     <div
       :class="[

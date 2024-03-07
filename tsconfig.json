@@ -4,7 +4,7 @@
     "useDefineForClassFields": true,
     "module": "ESNext",
     "moduleResolution": "Node",
-    "strict": true,
+    "strict": false, // 是否严格模式
     "jsx": "preserve",
     "resolveJsonModule": true,
     "isolatedModules": true,
@@ -12,12 +12,15 @@
     "lib": ["ESNext", "DOM"],
     "skipLibCheck": true,
     "noEmit": true,
+    "paths": {
+      "@/*": ["./src/*"]
+    }
   },
   "include": ["src/**/*.ts", "src/**/*.d.ts", "src/**/*.tsx", "src/**/*.vue", "page/main.ts"],
   "references": [
-     {
-       "path": "./tsconfig.config.json"
-     },
+    {
+      "path": "./tsconfig.config.json"
+    },
     {
       "path": "./tsconfig.app.json"
     },

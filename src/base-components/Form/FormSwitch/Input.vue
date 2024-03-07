@@ -43,6 +43,9 @@ const emit = defineEmits<InputEmit>();
 watch(localValue, () => {
   emit("update:modelValue", localValue.value);
 });
+watch(props, () => {
+  localValue.value = props.modelValue;
+},{deep: true});
 </script>
 
 <template>

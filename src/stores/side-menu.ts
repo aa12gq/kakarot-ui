@@ -1,5 +1,6 @@
 import { defineStore } from "pinia";
-import type { Icon } from "@/base-components/Lucide/Lucide.vue";
+import type { Icon } from "@/base-components/Lucide";
+
 export interface Menu {
   icon: Icon;
   title: string;

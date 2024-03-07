@@ -52,11 +52,11 @@ onMounted(() => {
   >
     <div class="h-[70px] px-3 sm:px-8 flex items-center">
       <a href="" class="flex mr-auto">
-        <img
-          alt="Midone Tailwind HTML Admin Template"
+        <!-- <img
+          alt=""
           class="w-6"
-          src=""
-        />
+          :src=""
+        /> -->
       </a>
       <a href="#" @click="(e) => e.preventDefault()">
         <Lucide
@@ -116,7 +116,7 @@ onMounted(() => {
               :setActiveMobileMenu="setActiveMobileMenu"
             ></Menu>
             <!-- BEGIN: Second Child -->
-            <Transition @enter="(enter as any)" @leave="(leave as any)" v-if="menu.subMenu">
+            <Transition @enter="enter" @leave="leave" v-if="menu.subMenu">
               <ul
                 v-if="menu.subMenu && menu.activeDropdown"
                 :class="[
@@ -138,8 +138,8 @@ onMounted(() => {
                   ></Menu>
                   <!-- BEGIN: Third Child -->
                   <Transition
-                    @enter="(enter as any)"
-                    @leave="(leave as any)"
+                    @enter="enter"
+                    @leave="leave"
                     v-if="subMenu.subMenu"
                   >
                     <ul
