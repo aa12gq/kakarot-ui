@@ -63,7 +63,6 @@ export const UserMenus = (success: (m: MenuResource[]) => void, fail?: (why: any
   return GetClient(UCClient)
     .menus(MenusRequest.create())
     .response.then((re: MenusReply) => {
-      console.log("获取到菜单资源", re)
       success(re.menus as MenuResource[]);
     }, fail);
 };

@@ -120,7 +120,6 @@ export const isPageGranted = computed((): ((pageName?: MenuPageName) => boolean)
     if (pageName === null || pageName === undefined) {
       return true;
     }
-    console.log('grantedPages', pageName, grantedPages.value, grantedPages.value[pageName]);
     return grantedPages.value[pageName];
   };
 });
@@ -161,11 +160,9 @@ export const useSideMenuStore = computed<SideMenuState>(() => {
 export const initUserMenu = (): Promise<void> => {
   return UserMenus(
     um => {
-      console.log('用户菜单获取成功', assembleGrantedMenu(um, menuSlots.menu));
       userMenus.value = { menu: assembleGrantedMenu(um, menuSlots.menu) };
     },
     why => {
-      console.error('用户菜单获取失败');
       throw { code: why.code, message: `用户菜单获取失败: ${decodeURIComponent(why.message)}` };
     }
   );
