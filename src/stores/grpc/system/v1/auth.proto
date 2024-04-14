@@ -1,0 +1,119 @@
+syntax = "proto3";
+
+package com.kakarot.system.grpc.v1;
+
+
+import "google/api/annotations.proto";
+import "protoc-gen-openapiv2/options/annotations.proto";
+
+option go_package = "go-kakarot/proto/system/v1;v1";
+
+option (.grpc.gateway.protoc_gen_openapiv2.options.openapiv2_swagger) = {
+  info: {
+    title: "系统管理-用户认证模块";
+    version: "1.0.0";
+    description: "登录/凭证签发、鉴权等";
+    contact: {
+      name: "贝吉塔信息技术中心";
+      url: "https://dev.kakarot.com";
+    };
+  };
+  schemes: [HTTP, HTTPS];
+  consumes: "application/json";
+  produces: "application/json";
+};
+enum LoginMethod {
+  account = 0;
+  tel = 1;
+  code = 2;
+}
+message LoginRequest {
+  LoginMethod method = 1;
+  string username = 2;
+  string phone_num = 3;
+  string password = 4;
+  string  code = 5;
+}
+message LoginReply {
+  uint64 uid = 1;
+  string username = 2;
+  string jwt = 3;
+}
+
+message LoginByPhoneRequest {
+  string phone = 1;
+  string code = 2;
+}
+
+message LoginByPhoneReply {
+  uint64 uid = 1;
+  string username = 2;
+  string jwt = 3;
+}
+
+message RenewTokenRequest {
+}
+message RenewTokenReply {
+  // 新签发的token
+  string jwt = 1;
+}
+
+message MenuResource {
+  // 菜单id
+  uint64 id = 1;
+  uint64 parent_id = 2;
+  string name = 3;
+  repeated string apis = 5;
+  repeated MenuResource submenu = 6;
+}
+message SyncMenuResourcesRequest {
+
+}
+message SyncMenuResourcesReply{
+  MenuResource menus = 1;
+}
+
+message CheckUserPasswordRequest {
+  uint64 uid = 1;
+  string password = 2;
+}
+
+message CheckUserPasswordReply {}
+
+service Auth{
+  // 获取资源-菜单树
+  rpc SyncMenuResources(SyncMenuResourcesRequest) returns (SyncMenuResourcesReply) {
+    option (google.api.http) = {
+      get: "/v1/system/auth/sync-menu-resources"
+    };
+  }
+  // 登录,并签发jwt
+  rpc Login (LoginRequest) returns (LoginReply){
+    option (google.api.http) = {
+      post: "/v1/system/auth/login"
+      body: "*"
+    };
+  };
+  // 手机验证码登录,并签发jwt
+  rpc LoginByPhone(LoginByPhoneRequest) returns (LoginByPhoneReply) {
+    option (google.api.http) = {
+      post: "/v1/system/auth/login-by-phone"
+      body: "*"
+    };
+  }
+
+  // 更新jwt
+  rpc RenewToken(RenewTokenRequest)returns(RenewTokenReply){
+    option (google.api.http) = {
+      post: "/v1/system/auth/renew-token"
+      body: "*"
+    };
+  }
+  // 检查密码是否正确
+  rpc CheckUserPassword(CheckUserPasswordRequest) returns (CheckUserPasswordReply){
+    option (google.api.http) = {
+      post: "/v1/system/auth/check-user-password"
+      body: "*"
+    };
+  };
+}

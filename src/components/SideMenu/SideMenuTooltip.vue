@@ -2,12 +2,13 @@
 import _ from "lodash";
 import { onMounted, withDefaults, ref, provide } from "vue";
 import Tippy, {type ProvideTippy } from "@/base-components/Tippy";
-import type { PopperElement } from "tippy.js";
+import type { PopperElement, Placement } from "tippy.js";
 
 interface SideMenuTooltipProps {
   refKey?: string;
   as?: string | object;
   content: string;
+  placement?: Placement;
 }
 
 const toggleTooltip = (el: PopperElement) => {
@@ -26,6 +27,7 @@ const initTooltipEvent = (tippyRef: PopperElement) => {
 
 const props = withDefaults(defineProps<SideMenuTooltipProps>(), {
   as: "a",
+  placement: "auto"
 });
 
 const tippyRef = ref<PopperElement>();
@@ -46,9 +48,7 @@ onMounted(() => {
   <Tippy
     :as="props.as"
     :content="props.content"
-    :options="{
-      placement: 'left',
-    }"
+    :placement="props.placement"
     refKey="sideMenuTooltipRef"
   >
     <slot></slot>

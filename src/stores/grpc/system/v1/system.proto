@@ -1,0 +1,209 @@
+syntax = "proto3";
+
+package com.kakarot.system.grpc.v1;
+
+import "google/api/annotations.proto";
+import "protoc-gen-openapiv2/options/annotations.proto";
+
+option go_package = "proto/system/v1;v1";
+
+option (.grpc.gateway.protoc_gen_openapiv2.options.openapiv2_swagger) = {
+    info: {
+        title: "系统管理";
+        version: "1.0.0";
+        description: "系统管理, 用户, 角色, 权限管理";
+    };
+    schemes: [HTTP, HTTPS];
+    consumes: "application/json";
+    produces: "application/json";
+};
+
+service System {
+    rpc AddUser(UserRequest) returns (BaseReply) {
+        option (google.api.http) = {
+            post: "/v1/system/user"
+            body: "*"
+        };
+    }
+
+    rpc UpdateUser(UserRequest) returns (BaseReply) {
+        option (google.api.http) = {
+            put: "/v1/system/user"
+            body: "*"
+        };
+    }
+
+    rpc DeleteUser(UserIdRequest) returns (BaseReply) {
+        option (google.api.http) = {
+            delete: "/v1/system/user"
+        };
+    }
+
+    rpc QueryUser(UserIdRequest) returns (UserReply) {
+        option (google.api.http) = {
+            get: "/v1/system/user"
+        };
+    }
+
+    rpc ListUser(UserListRequest) returns (UserListReply) {
+        option (google.api.http) = {
+            get: "/v1/system/user/list"
+        };
+    }
+
+    rpc AddRoleToUser(RoleToUserRequest) returns (BaseReply) {
+        option (google.api.http) = {
+            post: "/v1/system/user/role"
+            body: "*"
+        };
+    }
+
+
+    rpc AddRole (RoleRequest) returns (BaseReply) {
+        option (google.api.http) = {
+            post: "/v1/staff/role"
+            body: "*"
+        };
+    };
+    rpc UpdateRole (RoleRequest) returns (BaseReply) {
+        option (google.api.http) = {
+            put: "/v1/staff/role"
+            body: "*"
+        };
+    };
+    rpc DeleteRole (RoleIdRequest) returns (BaseReply) {
+        option (google.api.http) = {
+            delete: "/v1/user/role/{id}"
+        };
+    };
+    rpc QueryRole (RoleIdRequest) returns (RoleReply) {
+        option (google.api.http) = {
+            get: "/v1/user/role/{id}"
+        };
+    };
+    rpc QueryRoleList (RoleIdRequest) returns (RoleListReply) {
+        option (google.api.http) = {
+            get: "/v1/hr/staff/role"
+        };
+    };
+
+    rpc AddRuleToRole (RuleToRoleRequest) returns (BaseReply) {
+        option (google.api.http) = {
+            post: "/v1/hr/staff/role_to_user"
+            body: "*"
+        };
+    };
+    // 更新个人系统账号密码
+    rpc UpdateUserPassword (UpdateUserPasswordRequest) returns (UpdateUserPasswordReply){
+        option (google.api.http) = {
+            post: "/v1/system/update_user_password"
+            body: "*"
+        };
+    };
+    // 重置个人系统账号密码
+    rpc ResetUserPassword(ResetUserPasswordRequest) returns (ResetUserPasswordReply) {
+        option (google.api.http) = {
+            post: "/v1/system/reset_user_password"
+            body: "*"
+        };
+    }
+}
+
+message User {
+    // 用户ID
+    uint64 id = 1;
+    string username = 2;
+    string password = 3;
+    repeated uint64 roles = 4;
+    string name =5;
+    string phone = 6;
+}
+
+message UserRequest {
+    User data =1;
+}
+
+message UserIdRequest {
+    uint64 id = 1;
+    string username = 2;
+}
+
+message UserListRequest {
+    int32 page = 1;
+    int32 page_size = 2;
+
+    // 系统用户名
+    string username = 3;
+    string phone  = 5;
+}
+
+message Role {
+    uint64 id = 1;
+    string name = 2;
+    repeated uint64 rules = 3;
+
+    int32 number = 4;
+    repeated uint64 user_ids = 5;
+}
+
+message RoleRequest {
+    Role data = 1;
+}
+
+message RoleIdRequest {
+    uint64 id = 1;
+}
+
+
+message RoleToUserRequest {
+    repeated uint64 role_ids = 1;
+    repeated uint64 user_ids = 2;//system user_id
+}
+
+message RuleToRoleRequest {
+    repeated uint64 role_ids = 1;
+    repeated uint64 rules = 2;
+}
+
+message BaseReply {
+    int32 code = 1;
+    string message = 2;
+    uint64 id = 3;
+}
+
+
+message  UserReply{
+    User data = 1;
+}
+
+message UserListReply {
+    repeated User data = 1;
+    int32 total = 2;
+}
+
+message RoleReply {
+    Role data = 1;
+}
+
+message RoleListReply {
+    repeated Role data = 1;
+}
+
+// 更新系统用户密码
+message UpdateUserPasswordRequest {
+    uint64 user_id = 1;
+    // 原始密码
+    string old_password = 2;
+    // 新密码
+    string new_password = 3;
+}
+message UpdateUserPasswordReply {
+}
+
+message ResetUserPasswordRequest {
+    string phone = 1;
+    string code = 2;
+}
+
+message ResetUserPasswordReply {
+}

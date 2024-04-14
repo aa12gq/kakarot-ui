@@ -1,38 +1,22 @@
 <script setup lang="ts">
-import { useDarkModeStore } from "@/stores/dark-mode";
-import {isDarkMode} from "@/components/DarkModeSwitcher/types";
-import {computed} from "vue";
-const darkMode = computed(() => useDarkModeStore().darkMode);
-const setDarkModeClass = () => {
-  const el = document.querySelectorAll("html")[0];
-  darkMode.value ? el.classList.add("dark") : el.classList.remove("dark");
-};
+import { computed } from 'vue';
+import Tippy, { type ProvideTippy } from '@/base-components/Tippy';
+import Lucide from '@/base-components/Lucide/Lucide.vue';
+import { darkMode, setDarkModeClass, switchMode } from '@/components/DarkModeSwitcher/scripts';
 
-const switchMode = () => {
-  useDarkModeStore().setDarkMode(!darkMode.value);
-  isDarkMode.value = darkMode.value;
-  setDarkModeClass();
-};
+const modeIcon = computed(() => {
+  return darkMode.value ? 'Sun1' : 'Moon1';
+});
+const iconTitle = computed(() => {
+  return darkMode.value ? '白昼模式' : '暗夜模式';
+});
 setDarkModeClass();
 </script>
 
 <template>
   <!-- BEGIN: Dark Mode Switcher -->
-  <div
-    class="fixed bottom-0 right-0 z-50 flex items-center justify-center w-40 h-12 mb-10 mr-10 border rounded-full shadow-md cursor-pointer box"
-    @click="switchMode"
-  >
-    <div class="mr-4 text-slate-600 dark:text-slate-200">暗夜模式</div>
-    <div
-      :class="[
-        'border w-[38px] h-[24px] p-px outline-none rounded-full relative cursor-pointer',
-        'before:content-[\'\'] before:w-[22px] before:h-[22px] before:transition-all before:duration-200 before:shadow-[1px_1px_3px_rgba(0,0,0,0.25)] before:absolute before:inset-y-0 before:my-auto before:rounded-full',
-        {
-          'bg-primary border-primary': darkMode,
-          'before:ml-[13px] before:bg-white': darkMode,
-        },
-      ]"
-    ></div>
-  </div>
+  <Tippy :content="iconTitle" as="div" placement="bottom" class="z-50 flex items-center justify-center p-2 cursor-pointer hover:rounded-full hover:bg-slate-500/20" @click="switchMode">
+    <Lucide class="w-5 h-5" :icon="modeIcon" />
+  </Tippy>
   <!-- END: Dark Mode Switcher -->
 </template>

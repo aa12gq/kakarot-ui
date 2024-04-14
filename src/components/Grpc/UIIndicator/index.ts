@@ -16,7 +16,7 @@ export class UIIndicatorInterceptor implements RpcInterceptor {
     interceptUnary(next: NextUnaryFn, method: MethodInfo, input: object, options: RpcOptions): UnaryCall {
         let re = next(method, input, options);
         if (!options.disableUIIndicator) {
-            uiIndicator = document.getElementById('vg-grpc-invoking-ani');
+            uiIndicator = document.getElementById('kk-grpc-invoking-ani');
             if (++inCommunicating > 0 && uiIndicator) {
                 uiIndicator.style.display = 'block';
             }

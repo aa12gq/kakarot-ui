@@ -1,0 +1,127 @@
+syntax = "proto3";
+
+package com.kakarot.uc.grpc.v1;
+
+import "google/api/annotations.proto";
+import "protoc-gen-openapiv2/options/annotations.proto";
+import "system/v1/auth.proto";
+
+option go_package = "go-kakarot/proto/uc/v1;v1";
+
+option (.grpc.gateway.protoc_gen_openapiv2.options.openapiv2_swagger) = {
+  info: {
+    title: "用户中心模块";
+    version: "1.0.0";
+    description: "用户个人信息维护、密码管理等";
+    contact: {
+      name: "贝吉塔信息";
+    };
+  };
+  schemes: [HTTP, HTTPS];
+  consumes: "application/json";
+  produces: "application/json";
+};
+message UpdatePasswordRequest {
+  string old_password = 1;
+  string new_password = 2;
+}
+message UpdatePasswordReply {
+}
+message BasicUserInfoRequest {
+}
+message UpdateAvatarRequest {
+  string fso_id = 1;
+  string file_path = 2;
+}
+message UpdateAvatarReply {
+}
+
+message BasicInfo {
+  // 用户ID
+  uint64 id = 1;
+  string username = 2;
+  string password = 3;
+  repeated uint64 roles = 4;
+  string name =5;
+  string phone = 6;
+}
+
+message BasicUserInfoReply {
+  BasicInfo basic_info = 1;
+  ExtInfo ext_info = 2;
+  message ExtInfo {
+    string avatar_path = 1;
+  }
+}
+message UpdateBasicUserInfoRequest {
+  // 手机号
+  string phone_number = 1;
+  // 用户在用户管理系统中的id
+  uint64 user_id = 2;
+}
+
+message UpdateBasicUserInfoReply {
+}
+// 用户搜索结果的用户信息
+message UserInfoForSearch {
+  uint64 user_id = 1;
+  string user_name = 2;
+  string gender = 3;
+  string avatar_path = 7;
+}
+
+message SearchUserRequest {
+  // 用户名字(模糊匹配).
+  string name = 1;
+  uint32 page_size = 2;
+  uint32 page_num = 3;
+}
+message SearchUserReply {
+  repeated UserInfoForSearch user_list = 1;
+  uint64 total = 2;
+}
+message MenusReply {
+  repeated com.kakarot.system.grpc.v1.MenuResource menus = 1;
+}
+message MenusRequest {
+
+}
+service UC{
+  // 更新个人系统账号密码
+  rpc UpdatePassword (UpdatePasswordRequest) returns (UpdatePasswordReply){
+    option (google.api.http) = {
+      post: "/v1/uc/password"
+      body: "*"
+    };
+  };
+
+  // 获取用户基本信息
+  rpc BasicUserInfo (BasicUserInfoRequest) returns(BasicUserInfoReply){
+    option (google.api.http) = {
+      get: "/v1/uc/basic-userinfo"
+    };
+  }
+  rpc UpdateAvatar(UpdateAvatarRequest) returns(UpdateAvatarReply){
+    option (google.api.http) = {
+      post: "/v1/uc/update-avatar"
+      body: "*"
+    };
+  }
+  rpc UpdateBasicUserInfo(UpdateBasicUserInfoRequest) returns(UpdateBasicUserInfoReply){
+    option (google.api.http) = {
+      post: "/v1/uc/update-basic-userinfo"
+      body: "*"
+    };
+  }
+  rpc SearchUser(SearchUserRequest) returns(SearchUserReply){
+    option(google.api.http) = {
+      get: "/v1/uc/search-user/{name}"
+    };
+  }
+  // 获取用户菜单
+  rpc Menus(MenusRequest) returns(MenusReply){
+    option(google.api.http) = {
+      get: "/v1/uc/menus"
+    };
+  }
+}

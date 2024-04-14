@@ -8,16 +8,17 @@ export default {
 import { useRouter } from "vue-router";
 import Lucide from "@/base-components/Lucide";
 import SideMenuTooltip from "./SideMenuTooltip.vue";
-import {type FormattedMenu, linkTo } from "./side-menu";
+import {type FormattedMenu, FormattedMenuType, linkTo} from "./side-menu";
+import {MenuPageName} from "@/stores/components/menu/side-menu";
 
 interface MenuProps {
   class?: string | object;
   menu: FormattedMenu;
   formattedMenuState: [
-    (FormattedMenu | "devider")[],
-    (computedFormattedMenu: Array<FormattedMenu | "devider">) => void
+    (FormattedMenuType)[],
+    (computedFormattedMenu: Array<FormattedMenuType>) => void
   ];
-  level: "first" | "second" | "third" | "fourth";
+  level: "first" | "second" | "third" | "fourth" | "fifth";
 }
 
 const router = useRouter();
@@ -28,10 +29,11 @@ const props = defineProps<MenuProps>();
   <SideMenuTooltip
     as="a"
     :content="props.menu.title"
+    :id="`menu-${props.menu.id}`"
     :href="
       props.menu.subMenu
         ? '#'
-        : ((pageName: string | undefined) => {
+        : ((pageName: MenuPageName | undefined) => {
             try {
               return router.resolve({
                 name: pageName,
@@ -49,7 +51,7 @@ const props = defineProps<MenuProps>();
           !props.menu.activeDropdown && props.level !== 'first',
         'bg-primary dark:bg-transparent':
           (props.menu.activeDropdown || props.menu.active) && props.level === 'first',
-        'before:content-[\'\'] before:block before:inset-0 before:bg-white/[0.08] before:rounded-lg before:absolute before:border-b-[3px] before:border-solid before:border-black/10 before:dark:border-black/10 before:dark:bg-darkmode-700':
+        'before:content-[\'\'] before:block before:inset-0 before:bg-white/[0.01] before:rounded-lg before:absolute before:border-b-[2px] before:border-solid before:border-white/50 before:dark:border-white/30 before:dark:bg-darkmode-700':
           (props.menu.activeDropdown || props.menu.active) && props.level === 'first',
         'after:content-[\'\'] after:w-[20px] after:h-[80px] after:mr-[-27px] after:bg-no-repeat after:bg-cover after:absolute after:top-0 after:bottom-0 after:right-0 after:my-auto after:bg-menu-active dark:after:bg-menu-active-dark':
           props.menu.active,
@@ -59,6 +61,7 @@ const props = defineProps<MenuProps>();
         // Animation
         'after:mr-[-47px] after:opacity-0 after:animate-[0.3s_ease-in-out_1s_active-side-menu-chevron] after:animate-fill-mode-forwards':
           props.menu.active && props.level === 'first',
+        'bg-white/[0.1] dark:bg-white/[0.08]': props.menu.active && props.menu.pageName === router.currentRoute.value.name
       },
       props.class,
     ]"
@@ -69,11 +72,11 @@ const props = defineProps<MenuProps>();
   >
     <div
       :class="{
-        'z-10 dark:text-slate-300': props.menu.activeDropdown && props.level === 'first',
+        'z-10 dark:text-slate-300': (props.menu.activeDropdown || props.menu.active) && props.level === 'first',
         'dark:text-slate-400': !props.menu.activeDropdown && props.level === 'first',
       }"
     >
-      <Lucide :icon="props.menu.icon" />
+      <Lucide :icon="props.menu.icon" stroke="none" />
     </div>
     <div
       :class="[
@@ -81,10 +84,10 @@ const props = defineProps<MenuProps>();
         { 'font-medium': props.menu.activeDropdown && props.level !== 'first' },
         {
           'font-medium z-10 dark:text-slate-300':
-            props.menu.activeDropdown && props.level === 'first',
+            (props.menu.activeDropdown || props.menu.active) && props.level === 'first',
         },
         {
-          'dark:text-slate-400': !props.menu.activeDropdown && props.level === 'first',
+          'dark:text-slate-400': !props.menu.activeDropdown && !props.menu.active && props.level === 'first',
         },
       ]"
     >

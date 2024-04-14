@@ -1,0 +1,101 @@
+syntax = "proto3";
+
+package com.kakarot.user.grpc.v1;
+
+import "google/api/annotations.proto";
+
+option go_package = "go-kakarot/proto/user/v1;v1";
+option java_multiple_files = true;
+option java_package = "proto.user.v1";
+
+service User {
+	rpc SignupUsingPhone (SignupUsingPhoneRequest) returns (SignupUsingPhoneReply);
+	//新增账号
+	rpc AddUser (UserInfoRequest) returns (BaseReply);
+	//编辑账号信息
+	rpc UpdateUser (UserInfoRequest) returns (BaseReply);
+	//查询用户信息
+	rpc QueryUser (QueryUserInfoRequest) returns (QueryUserInfoReply) {
+		option (google.api.http) = {
+			post: "/v1/hr/staff/search"
+			body: "*"
+		};
+	};
+	//查询用户信息列表
+	rpc QueryUserList (QueryUserInfoListRequest) returns (QueryUserInfoListReply) {
+		option (google.api.http) = {
+			get: "/v1/hr/staff/user"
+		};
+	};
+}
+
+message UserInfo {
+	// 用户ID
+	uint64 id = 1;
+	// 用户名
+	string name = 2;
+	// 手机号
+	string phone = 3;
+	// 密码
+	string password = 4;
+	// 邮箱
+	string email = 5;
+}
+
+message SignupUsingPhoneRequest {
+	string name = 1;
+	string password = 2;
+	string password_confirm = 3;
+	string verify_code = 4;
+	string phone = 5;
+}
+message SignupUsingPhoneReply {
+	UserInfo user_info = 1;
+}
+
+message UserInfoIdRequest {
+	uint64 id = 1;
+}
+
+message UserInfoRequest {
+	UserInfo data = 1;
+}
+
+message BaseReply {
+	int32 type = 1;
+	string message = 2;
+	uint64 id =3;
+}
+
+enum SortType {
+	ASC = 0;
+	DESC = 1;
+}
+
+message QueryUserInfoListRequest {
+	// 分页大小
+	int32 page_size = 1;
+	// 页码
+	int32 page_num = 2;
+	// 排序字段
+	string sort = 3;
+	// 排序类型, 0:升序, 1:降序
+	SortType sort_type = 4;
+	// 用户名称
+	string user_name = 5;
+}
+
+message QueryUserInfoRequest {
+	uint64 id = 1;
+	string user_name = 2;
+	string phone_num = 6;
+}
+
+message QueryUserInfoReply {
+	UserInfo data = 1;
+}
+
+message QueryUserInfoListReply {
+	repeated UserInfo data = 1;
+	int32 total = 2;
+}

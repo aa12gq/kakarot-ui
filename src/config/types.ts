@@ -1,4 +1,4 @@
-export const default_jwt_header_key = 'kakarot-x-authorization';
+export const default_jwt_header_key = 'kk-x-authorization';
 interface Config {
   // 是否允许未登录使用web ui
   allowNoAuth?: boolean;

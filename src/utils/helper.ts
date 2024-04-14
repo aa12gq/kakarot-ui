@@ -1,6 +1,16 @@
 import dayjs from "dayjs";
 import duration from "dayjs/plugin/duration";
 import { parseColor } from "tailwindcss/lib/util/color";
+import {Timestamp, type Timestamp as ITimestamp} from "@/stores/grpc/google/protobuf/timestamp";
+import {RuleError} from "@/base-components/I18n-validators/yup";
+
+/**
+ * protobuf timestamp 转javascript Date
+ * @param t
+ */
+export const pbTimestamp2Date = (t:ITimestamp|undefined):Date => {
+  return Timestamp.toDate(t? t : Timestamp.create());
+}
 dayjs.extend(duration);
 
 const cutText = (text: string, length: number) => {
@@ -14,7 +24,16 @@ const cutText = (text: string, length: number) => {
   }
 };
 
-const formatDate = (date: string, format: string) => {
+const splitText = (text: string, length: number) => {
+  if (text.split("").length > length) {
+    const string = text.substring(0, length);
+    return string + "...";
+  } else {
+    return text;
+  }
+};
+
+const formatDate = (date: dayjs.ConfigType, format: string) => {
   return dayjs(date).format(format);
 };
 
@@ -137,10 +156,11 @@ const stringToHTML = (arg: string) => {
 };
 
 const slideUp = (
-  el: HTMLElement,
+  _el: Element,
   duration = 300,
   callback = (el: HTMLElement) => {}
 ) => {
+  var el = _el as HTMLElement;
   el.style.transitionProperty = "height, margin, padding";
   el.style.transitionDuration = duration + "ms";
   el.style.height = el.offsetHeight + "px";
@@ -166,15 +186,16 @@ const slideUp = (
 };
 
 const slideDown = (
-  el: HTMLElement,
+  _el: Element,
   duration = 300,
   callback = (el: HTMLElement) => {}
 ) => {
+  var el = _el as HTMLElement;
   el.style.removeProperty("display");
   let display = window.getComputedStyle(el).display;
   if (display === "none") display = "block";
   el.style.display = display;
-  let height = el.offsetHeight;
+  const height = el.offsetHeight;
   el.style.overflow = "hidden";
   el.style.height = "0";
   el.style.paddingTop = "0";
@@ -198,8 +219,61 @@ const slideDown = (
   }, duration);
 };
 
+// pickObjectKeys 接受两个参数：一个对象和一个键数组。该函数将基于原始对象返回一个新对象，但仅包含你想要的键
+function pickObjectKeys<T extends Object, K extends keyof T>(
+  obj: T,
+  keys: K[]
+) {
+  const result = {} as Pick<T, K>;
+  for (const key of keys) {
+    if (Reflect.has(obj, key)) {
+      result[key] = Reflect.get(obj, key);
+    }
+  }
+  return result;
+}
+
+/**
+* @param idCard
+*/
+function idCardGetBirth(idCard: string) {
+  var birthday = "";
+  if(idCard != null && idCard != ""&& idCard.length == 18){
+      birthday = idCard.slice(6,14);
+      birthday = birthday.replace(/(.{4})(.{2})/,"$1-$2-");
+      //通过正则表达式来指定输出格式为:1990-01-01
+  }   
+  return birthday;
+}
+/**
+* @param idCard
+*/
+function idCardGetSex(idCard: string) {
+  var sexStr = '';
+  if (idCard.length != 18) {
+    return sexStr;
+  }
+  if (parseInt(idCard.slice(-2, -1)) % 2 == 1) {
+      sexStr = '男';
+  }
+  else {
+      sexStr = '女';
+  }
+  return sexStr;
+}
+
+/**
+ * 根据yup错误规则提取字符串
+ * @param errs 错误
+ */
+const getErrMsg = (errs: RuleError): string => {
+  if (errs.errors.length > 0) return errs.errors[0].message
+  return ''
+}
+
 export {
   cutText,
+  splitText,
   formatDate,
   capitalizeFirstLetter,
   onlyNumber,
@@ -213,4 +287,8 @@ export {
   stringToHTML,
   slideUp,
   slideDown,
+  pickObjectKeys,
+  idCardGetBirth,
+  idCardGetSex,
+  getErrMsg
 };

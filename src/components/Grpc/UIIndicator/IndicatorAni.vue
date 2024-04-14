@@ -7,7 +7,7 @@ export default {
 import {loadingIndicator} from "@/components/LoadingIndicator";
 </script>
 <template>
-  <div id="vg-grpc-invoking-ani"
+  <div id="kk-grpc-invoking-ani"
        class="fixed z-[999999] hidden top-[23vh] left-[50vw] flex flex-col">
     <div class="flex justify-center">
       <loadingIndicator.Puff />

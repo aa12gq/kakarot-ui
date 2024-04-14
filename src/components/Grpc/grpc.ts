@@ -1,5 +1,6 @@
 import type {RpcTransport} from "@protobuf-ts/runtime-rpc";
 import {GrpcWebFetchTransport} from '@protobuf-ts/grpcweb-transport';
+import {AuthInterceptor} from "./auth";
 import {UIIndicatorInterceptor} from "./UIIndicator";
 import {config, type GrpcEndpoint} from "@/config"
 
@@ -46,7 +47,7 @@ function GetTransport(endpointName?: string): GrpcWebFetchTransport {
     transport = new GrpcWebFetchTransport({
         baseUrl: endpoint.url,
         format: "binary",
-        interceptors: [new UIIndicatorInterceptor],
+        interceptors: [new AuthInterceptor, new UIIndicatorInterceptor],
         timeout: grpcTimeout * 1000
     });
     transports.set(endpointName, transport);

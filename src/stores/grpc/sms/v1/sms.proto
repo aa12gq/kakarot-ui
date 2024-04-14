@@ -1,0 +1,111 @@
+syntax = "proto3";
+
+package com.kakarot.sms.grpc.v1;
+
+import "protoc-gen-openapiv2/options/annotations.proto";
+import "google/api/annotations.proto";
+
+option go_package = "go-kakarot/proto/sms/v1;v1";
+option java_multiple_files = true;
+option java_package = "proto.sms.v1";
+
+option (.grpc.gateway.protoc_gen_openapiv2.options.openapiv2_swagger) = {
+  info: {
+    title: "短信服务集成平台";
+    version: "1.0.0";
+    description: "短信服务集成平台, 提供统一短信服务和接口";
+    contact: {
+      name: "aa12gq";
+      url: "https://github.com/aa12gq/";
+    };
+  };
+  schemes: [HTTP, HTTPS];
+  consumes: "application/json";
+  produces: "application/json";
+};
+
+service Sms {
+  // 发送手机验证码
+  rpc SendUsingPhone (SendUsingPhoneRequest) returns (SendUsingPhoneReply){
+    option (google.api.http) = {
+      post: "/v1/sms/send",
+      body: "*"
+    };
+  };
+  // 验证手机验证码
+  rpc VerifyCodeByPhone(VerifyCodeByPhoneRequest) returns (VerifyCodeByPhoneReply){
+    option (google.api.http) = {
+      post: "/v1/verify-codes/phone",
+      body: "*"
+    };
+  };
+  // 图片验证码
+  rpc ShowCaptcha(ShowCaptchaRequest) returns (ShowCaptchaReply){
+    option (google.api.http) = {
+      post: "/v1/verify-codes/captcha",
+      body: "*"
+    };
+  }
+  // 签发jwt
+  rpc GetToken(GetTokenRequest) returns (GetTokenReply) {
+    option (google.api.http) = {
+      post: "/v1/sms/auth/token"
+      body: "*"
+    };
+  }
+}
+
+message SendUsingPhoneRequest {
+  // 目标手机号
+  string phone_number = 1;
+  // 验证码id(填写captcha.testing_key可跳过验证)
+  string captcha_id = 2;
+  // 验证码答案
+  string captcha_answer = 3;
+  // token
+  string token = 4;
+  // 密码(客户端提交不是必须的，重置密码的业务类型是必须的)
+  string password = 5;
+}
+
+message SendUsingPhoneReply {
+  // 状态描述
+  string message = 1;
+  // 状态码
+  int32 code = 2;
+}
+
+message ShowCaptchaRequest {}
+
+message ShowCaptchaReply{
+  // 图片验证码id
+  string captcha_id = 1;
+  // 图片验证码
+  string captcha_image = 2;
+}
+
+enum BusinessType {
+  // 用户注册
+  RegisterType  = 0;
+  // 用户登录
+  LoginType = 1;
+  // 用户找回密码
+  RetrievePasswordType = 2;
+}
+message GetTokenRequest {
+  string phone = 1;
+  BusinessType business_type = 2;
+}
+message GetTokenReply {
+  string jwt = 2;
+}
+
+message VerifyCodeByPhoneRequest {
+  string phone = 1;
+  string code = 2;
+  BusinessType business_type = 3;
+}
+
+message VerifyCodeByPhoneReply {
+  bool success = 1;
+}

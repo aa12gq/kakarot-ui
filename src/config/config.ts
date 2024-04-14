@@ -12,7 +12,7 @@ export const config: Config = {
   auth: {
     // 自动更新JWT时间间隔(秒)
     jwt_auto_renew_interval: 51,
-    jwt_header_key: "kakarot-x-authorization",
+    jwt_header_key: "kk-x-authorization",
   },
   grpc: {
     defaultEndpoint: "default",

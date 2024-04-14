@@ -1,45 +1,55 @@
+<script lang="ts">
+export default {
+};
+import {reactive} from "vue";
+import {FormattedMenuType} from "@/components/SideMenu/side-menu";
+export const formattedMenu = reactive<Array<FormattedMenuType>>([]);
+</script>
 <script setup lang="ts">
 import Devider from "@/components/SideMenu/Devider.vue";
 import Menu from "@/components/SideMenu/Menu.vue";
-import {useSideMenuStore} from "@/stores/side-menu";
-import type {FormattedMenu} from "@/components/SideMenu/side-menu";
-import {enter, leave, nestedMenu, assignMenus} from "@/components/SideMenu/side-menu";
-import {computed, onMounted, reactive, watch} from "vue";
+import {useSideMenuStore} from "@/stores/components/menu/side-menu";
+import {enter, leave, nestedMenu, assignMenus, updateMenuActiveStates} from "./side-menu";
+import {onMounted, watch} from "vue";
 import {useRoute} from "vue-router";
 
 interface MenuItemsProps {
   // 切换页面时, 是否保持菜单状态. 否则只会展开当前页面所对应的菜单, 并关闭其他所有菜单.
   keepMenuState?: boolean
 }
+
 const props = defineProps<MenuItemsProps>();
 
 const route = useRoute();
-let formattedMenu = reactive<Array<FormattedMenu | "devider">>([]);
+
 const setFormattedMenu = (
-    computedFormattedMenu: Array<FormattedMenu | "devider">
+    computedFormattedMenu: Array<FormattedMenuType>
 ) => {
   assignMenus(formattedMenu, computedFormattedMenu, props.keepMenuState);
 };
-const sideMenuStore = useSideMenuStore();
-const sideMenu = computed(() => nestedMenu(sideMenuStore.menu, route));
+const sideMenu = nestedMenu(useSideMenuStore.value.menu, route);
 
-watch(sideMenu, () => {
-    setFormattedMenu(sideMenu.value);
+watch(useSideMenuStore, (v) => {
+  setFormattedMenu(nestedMenu(v.menu, route));
+});
+watch(route,  ()=>{
+  updateMenuActiveStates(formattedMenu, route);
 });
 
 onMounted(() => {
-  setFormattedMenu(sideMenu.value);
+  setFormattedMenu(sideMenu);
 });
 </script>
 <template>
   <nav
-      class="hidden md:block w-[105px] xl:w-[250px] px-5 pt-8 pb-16 overflow-x-hidden"
+      class="hidden md:block w-[105px] xl:w-[250px] px-5 pb-16 overflow-x-hidden  border-t-[1.2rem] rounded-[0.6rem] border-black/[0.001] dark:border-black/[0.001]"
+      id="sideMenu"
   >
     <ul>
-      <!-- BEGIN: First Child -->
+      <!-- BEGIN: First Level Child -->
       <template v-for="(menu, menuKey) in formattedMenu">
         <Devider
-            v-if="menu == 'devider'"
+            v-if="menu === 'devider'"
             type="li"
             :class="[
                   'my-6',
@@ -50,7 +60,7 @@ onMounted(() => {
                 ]"
             :key="'devider-' + menuKey"
         ></Devider>
-        <li v-else :key="menuKey">
+        <li v-else-if="!menu.ignore" :key="menuKey" :id="`menu-wp-${menu.id}`">
           <Menu
               :class="{
                     // Animation
@@ -62,7 +72,7 @@ onMounted(() => {
               :formattedMenuState="[formattedMenu, setFormattedMenu]"
               level="first"
           ></Menu>
-          <!-- BEGIN: Second Child -->
+          <!-- BEGIN: Second Level Child -->
           <Transition @enter="enter" @leave="leave">
             <ul
                 v-if="menu.subMenu && menu.activeDropdown"
@@ -78,16 +88,17 @@ onMounted(() => {
               <li
                   v-for="(subMenu, subMenuKey) in menu.subMenu"
                   :key="subMenuKey"
+                  :id="`menu-wp-${subMenu.id}`"
               >
-                <Menu
-                    :class="`opacity-0 translate-x-[50px] animate-[0.4s_ease-in-out_0.1s_intro-menu] animate-fill-mode-forwards animate-delay-${
+                <Menu v-if="!subMenu.ignore"
+                      :class="`opacity-0 translate-x-[50px] animate-[0.4s_ease-in-out_0.1s_intro-menu] animate-fill-mode-forwards animate-delay-${
                           (subMenuKey + 1) * 10
                         }`"
-                    :menu="subMenu"
-                    :formattedMenuState="[formattedMenu, setFormattedMenu]"
-                    level="second"
+                      :menu="subMenu"
+                      :formattedMenuState="[formattedMenu, setFormattedMenu]"
+                      level="second"
                 ></Menu>
-                <!-- BEGIN: Third Child -->
+                <!-- BEGIN: Third Level Child -->
                 <Transition
                     @enter="enter"
                     @leave="leave"
@@ -109,19 +120,20 @@ onMounted(() => {
                               thirdSubMenu, thirdSubMenuKey
                             ) in subMenu.subMenu"
                         :key="thirdSubMenuKey"
+                        :id="`menu-wp-${thirdSubMenu.id}`"
                     >
-                      <Menu
-                          :class="`opacity-0 translate-x-[50px] animate-[0.4s_ease-in-out_0.1s_intro-menu] animate-fill-mode-forwards animate-delay-${
+                      <Menu v-if="!thirdSubMenu.ignore"
+                            :class="`opacity-0 translate-x-[50px] animate-[0.4s_ease-in-out_0.1s_intro-menu] animate-fill-mode-forwards animate-delay-${
                                 (thirdSubMenuKey + 1) * 10
                               }`"
-                          :menu="thirdSubMenu"
-                          :formattedMenuState="[
+                            :menu="thirdSubMenu"
+                            :formattedMenuState="[
                                 formattedMenu,
                                 setFormattedMenu,
                               ]"
-                          level="third"
+                            level="third"
                       ></Menu>
-                      <!-- BEGIN: Fourth Child -->
+                      <!-- BEGIN: Fourth Level Child -->
                       <Transition
                           @enter="enter"
                           @leave="leave"
@@ -143,33 +155,73 @@ onMounted(() => {
                               fourthSubMenu, fourthSubMenuKey
                             ) in thirdSubMenu.subMenu"
                               :key="fourthSubMenuKey"
+                              :id="`menu-wp-${fourthSubMenu.id}`"
                           >
-                            <Menu
-                                :class="`opacity-0 translate-x-[50px] animate-[0.4s_ease-in-out_0.1s_intro-menu] animate-fill-mode-forwards animate-delay-${
+                            <Menu v-if="!fourthSubMenu.ignore"
+                                  :class="`opacity-0 translate-x-[50px] animate-[0.4s_ease-in-out_0.1s_intro-menu] animate-fill-mode-forwards animate-delay-${
                                 (fourthSubMenuKey + 1) * 10
                               }`"
-                                :menu="fourthSubMenu"
-                                :formattedMenuState="[
+                                  :menu="fourthSubMenu"
+                                  :formattedMenuState="[
                                 formattedMenu,
                                 setFormattedMenu,
                               ]"
-                                level="fourth"
+                                  level="fourth"
                             ></Menu>
+                            <!-- BEGIN: Fifth Level Child -->
+                            <Transition
+                                @enter="enter"
+                                @leave="leave"
+                                v-if="fourthSubMenu.subMenu"
+                            >
+                              <ul
+                                  v-if="fourthSubMenu.subMenu && fourthSubMenu.activeDropdown"
+                                  :class="[
+                            'bg-white/[0.08] rounded-lg relative dark:bg-transparent',
+                            'before:content-[\'\'] before:block before:inset-0 before:bg-primary/60 before:rounded-lg before:absolute before:z-[-1] before:dark:bg-darkmode-900/30',
+                            {
+                              block: fourthSubMenu.activeDropdown,
+                            },
+                            { hidden: !fourthSubMenu.activeDropdown },
+                          ]"
+                              >
+                                <li
+                                    v-for="(
+                              fifthSubMenu, fifthSubMenuKey
+                            ) in fourthSubMenu.subMenu"
+                                    :key="fifthSubMenuKey"
+                                    :id="`menu-wp-${fifthSubMenu.id}`"
+                                >
+                                  <Menu v-if="!fifthSubMenu.ignore"
+                                        :class="`opacity-0 translate-x-[50px] animate-[0.4s_ease-in-out_0.1s_intro-menu] animate-fill-mode-forwards animate-delay-${
+                                (fifthSubMenuKey + 1) * 10
+                              }`"
+                                        :menu="fifthSubMenu"
+                                        :formattedMenuState="[
+                                formattedMenu,
+                                setFormattedMenu,
+                              ]"
+                                        level="fifth"
+                                  ></Menu>
+                                </li>
+                              </ul>
+                            </Transition>
+                            <!-- END: Fifth Level Child -->
                           </li>
                         </ul>
                       </Transition>
-                      <!-- END: Fourth Child -->
+                      <!-- END: Fourth Level Child -->
                     </li>
                   </ul>
                 </Transition>
-                <!-- END: Third Child -->
+                <!-- END: Third Level Child -->
               </li>
             </ul>
           </Transition>
-          <!-- END: Second Child -->
+          <!-- END: Second Level Child -->
         </li>
       </template>
-      <!-- END: First Child -->
+      <!-- END: First Level Child -->
     </ul>
   </nav>
 </template>
