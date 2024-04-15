@@ -1,7 +1,7 @@
 #!/bin/bash
 NODE_BIN_PATH=./node_modules/.bin
 OUT_DIR=./src/stores/grpc
-API_PROTO_FILES=`find src/stores/grpc/$1 -path src/stores/grpc/third_party -prune -o -name "*.proto" | grep -v "^src/stores/grpc/third_party"`
+API_PROTO_FILES=`find src/stores/grpc/$1 -path src/stores/grpc/third_party -prune -o -name "*.proto" | grep -v "^src/stores/grpc/third_party" | grep "$2"`
 
 for proto in $API_PROTO_FILES; do
       echo compling $proto...
