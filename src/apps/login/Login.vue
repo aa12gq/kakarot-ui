@@ -335,7 +335,7 @@ const SendCode = () => {
           <div class="my-auto">
             <!-- <img alt="管理后台" class="w-1/2 -mt-0 ml-10 -intro-x" :src="illustrationUrl" /> -->
             <div class="mt-5 text-3xl font-medium leading-tight text-white -intro-x">即刻登录,</div>
-            <div class="mt-5 w-[15rem] xl:-ml-[2rem] text-3xl font-medium text-white -intro-x">尽在掌握！</div>
+            <div class="mt-5 w-[15rem] xl:-ml-[2rem] text-3xl font-medium text-white -intro-x">助您驾驭全局！</div>
           </div>
         </div>
         <!-- END: Login Info -->
@@ -545,12 +545,6 @@ const SendCode = () => {
               >
                 登录
               </Button>
-              <!--              <Button-->
-              <!--                  variant="outline-secondary"-->
-              <!--                  class="w-full px-4 py-3 mt-3 align-top xl:w-32 xl:mt-0"-->
-              <!--              >-->
-              <!--              注册 -->
-              <!--              </Button>-->
               <Button
                 @click="
                   () => {
