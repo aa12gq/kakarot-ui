@@ -329,8 +329,8 @@ const SendCode = () => {
         <div class="flex-col hidden min-h-screen pt-12 xl:flex">
           <a href="" class="flex items-center -intro-x" style="filter: alpha(0.3)">
             <!-- <logo width="80" height="77" /> -->
-            <img src="@/assets/images/logo.png" class="w-24" />
-            <span class="ml-3 text-lg 2xl:text-xl text-white font-black">贝吉塔管理后台系统</span>
+            <img src="@/assets/images/logo.png" class="w-12" />
+            <span class="text-lg 2xl:text-xl text-white font-black">贝吉塔管理后台系统</span>
           </a>
           <div class="my-auto">
             <!-- <img alt="管理后台" class="w-1/2 -mt-0 ml-10 -intro-x" :src="illustrationUrl" /> -->

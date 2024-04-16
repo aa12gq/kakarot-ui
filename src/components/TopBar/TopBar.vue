@@ -198,7 +198,7 @@ const logout = inject<() => void>('logout');
         <img src="@/assets/images/logo.png" class="w-12" />
         <dl>
           <dt>
-            <span class="ml-3 lg:text-sm text-xs text-white">贝吉塔综合管理平台</span>
+            <span class="ml-3 lg:text-sm text-xs text-white">贝吉塔后台管理系统</span>
           </dt>
           <dd class="ml-3 text-xs text-warning pr-1">
             <!-- <img alt="" class="w-12 float-right" :src="logo2Url" /> -->
