@@ -16,7 +16,9 @@ import { userAvatar } from '@/stores/apps/uc';
 import { ucStore } from '@/stores/apps/uc';
 import { config } from '@/config';
 import { yup } from '@/base-components/I18n-validators';
+import { useRouter } from 'vue-router';
 
+const router = useRouter();
 const warningAlerts = ref<AlertMessage[]>([]);
 const infoAlerts = ref<AlertMessage[]>([]);
 const formData = reactive<User>(User.create());
@@ -209,8 +211,8 @@ onMounted(() => {
         <FormLabel class="sm:w-[7rem]">系统账号:</FormLabel>
         <span>{{ formData.account }}</span>
       </FormInline> -->
-    <!-- </div> -->
-    <!-- <div class="grid grid-cols-1 gap-y-1 xl:grid-cols-3 pr-5">
+      <!-- </div> -->
+      <!-- <div class="grid grid-cols-1 gap-y-1 xl:grid-cols-3 pr-5">
       <FormInline>
         <FormLabel class="sm:w-[7rem]">政治面貌:</FormLabel>
         <TomSelect class="flex-1" :option-list="PoliticalStatus" v-model="formData.politicalStatus" />
@@ -281,7 +283,7 @@ onMounted(() => {
         variant="secondary"
         @click="
           () => {
-            $router.push({ name: 'uc' });
+            router.push({ name: 'uc' });
           }
         "
       >

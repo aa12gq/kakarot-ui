@@ -3,6 +3,7 @@ import Tab from '@/base-components/Headless/Tab';
 import Lucide from '@/base-components/Lucide';
 import BasicInfo from './BasicInfo.vue';
 import { computed } from 'vue';
+import { darkMode } from '@/components/DarkModeSwitcher';
 
 const tabButtonClass = computed(() => (selected: boolean) => {
   return [
@@ -21,7 +22,7 @@ const tabButtonClass = computed(() => (selected: boolean) => {
     <Tab.List variant="tabs" class="border-b-0 flex-col overflow-x-auto overflow-y-hidden scrollbar-slim border-transparent dark:border-transparent sm:flex-row bg-slate-200 dark:bg-darkmode-800">
       <Tab v-slot="{ selected }">
         <Tab.Button :class="tabButtonClass(selected)" as="button">
-          <Lucide :icon="$darkMode ? 'BasicInfoDark' : 'BasicInfo'" class="w-4 h-4 mr-2" />
+          <Lucide :icon="darkMode ? 'BasicInfoDark' : 'BasicInfo'" class="w-4 h-4 mr-2" />
           基本信息
         </Tab.Button>
       </Tab>

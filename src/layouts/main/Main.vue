@@ -12,9 +12,10 @@ import Button from '@/base-components/Button';
 import { computed, onBeforeUpdate, onMounted, onUpdated, provide, ref } from 'vue';
 import { ucStore } from '@/stores/apps/uc';
 import LoginStatusNotification, { showLoginStatus } from '@/components/Auth/LoginStatusNotification.vue';
-import { useRouter } from 'vue-router';
+import { useRouter, useRoute } from 'vue-router';
 
 const router = useRouter();
+const route = useRoute();
 const requireAuthModalOpen = computed((): boolean => {
   return !config.allowNoAuth && (!authStore().Account || !authStore().Active) && !logoutModalOpen.value;
 });
@@ -99,7 +100,7 @@ const reloadAuth = () => {
           variant="primary"
           @click="
             () => {
-              $router.push({ name: 'login' });
+              router.push({ name: 'login' });
             }
           "
           class="w-24"
@@ -168,13 +169,13 @@ const reloadAuth = () => {
         >
           <RouterView v-slot="{ Component }">
             <KeepAlive>
-              <Component :is="Component" v-if="$route.meta.keepAlive && !$route.meta.devPage" :key="$route.path"></Component>
+              <Component :is="Component" v-if="route.meta.keepAlive && !route.meta.devPage" :key="route.path"></Component>
             </KeepAlive>
             <KeepAlive>
-              <DevView :is="DevView" v-if="$route.meta.keepAlive && $route.meta.devPage" :key="$route.path"></DevView>
+              <DevView :is="DevView" v-if="route.meta.keepAlive && route.meta.devPage" :key="route.path"></DevView>
             </KeepAlive>
-            <Component :is="Component" v-if="!$route.meta.keepAlive && !$route.meta.devPage" :key="$route.path"></Component>
-            <DevView v-if="!$route.meta.keepAlive && $route.meta.devPage" :key="$route.path"></DevView>
+            <Component :is="Component" v-if="!route.meta.keepAlive && !route.meta.devPage" :key="route.path"></Component>
+            <DevView v-if="!route.meta.keepAlive && route.meta.devPage" :key="route.path"></DevView>
           </RouterView>
         </div>
         <!-- END: Content -->

@@ -11,7 +11,9 @@ import { RenewJWT } from '@/components/Auth';
 import { initUserMenu, isPageGranted } from '@/stores/components/menu/side-menu';
 import { AlertMessage, Alerts, SetAlertMessages } from '@/base-components/Alert';
 import Page403 from '@/apps/_403.vue';
+import { useRouter } from 'vue-router';
 
+const router = useRouter();
 /*****************************************************
  * Home组件对用户登录状态进行验证, 状态正确后再加载页面框架  *
  *****************************************************/
@@ -87,7 +89,7 @@ watch(loginStatusCheckComplete, () => {
             variant="primary"
             @click="
               () => {
-                $router.push({ name: 'login' });
+                router.push({ name: 'login' });
               }
             "
             class="w-24"

@@ -7,16 +7,17 @@ export default {
 <script setup lang="ts">
 import { useRouter } from "vue-router";
 import Lucide from "@/base-components/Lucide";
-import type { FormattedMenu } from "@/components/SideMenu/side-menu";
+import type {FormattedMenu, FormattedMenuType} from "@/components/SideMenu/side-menu";
 import { linkTo } from "./mobile-menu";
+import {MenuPageName} from "@/stores/components/menu/side-menu";
 
 interface MenuProps {
   menu: FormattedMenu;
   formattedMenuState: [
-    (FormattedMenu | "devider")[],
-    (computedFormattedMenu: Array<FormattedMenu | "devider">) => void
+    (FormattedMenuType)[],
+    (computedFormattedMenu: Array<FormattedMenuType>) => void
   ];
-  level: "first" | "second" | "third";
+  level: "first" | "second" | "third" | "fourth" | "fifth";
   setActiveMobileMenu: (active: boolean) => void;
 }
 
@@ -30,7 +31,7 @@ const [formattedMenu, setFormattedMenu] = props.formattedMenuState;
     :href="
       props.menu.subMenu 
         ? '#' 
-        : ((pageName: string | undefined) => {
+        : ((pageName: MenuPageName) => {
             try {
               return router.resolve({
                 name: pageName,
@@ -42,8 +43,8 @@ const [formattedMenu, setFormattedMenu] = props.formattedMenuState;
     "
     :class="[
       'h-[50px] flex items-center text-white',
-      props.level == 'first' && 'px-6',
-      props.level != 'first' && 'px-4',
+      props.level === 'first' && 'px-6',
+      props.level !== 'first' && 'px-4',
     ]"
     @click="
       (event) => {

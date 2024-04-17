@@ -55,7 +55,7 @@ message BasicUserInfoReply {
 }
 message UpdateBasicUserInfoRequest {
   // 手机号
-  string phone_number = 1;
+  string phone = 1;
   // 用户在用户管理系统中的id
   uint64 user_id = 2;
 }

@@ -4,7 +4,7 @@ export default {
 };
 import { getHeightWithMargin, getOutlineHeight } from '@/utils/dom-dimension';
 import { layoutScrollLockStore } from '@/stores/components/top-bar';
-import { useRoute } from 'vue-router';
+import { useRoute, useRouter } from 'vue-router';
 
 /**
  * 切换布局滚动锁定状态及自适应窗口大小
@@ -64,6 +64,7 @@ import { userAvatar, ucStore, SearchUser, UserInfoForSearch } from '@/stores/app
 
 const ucInfo = ucStore();
 const route = useRoute();
+const router = useRouter();
 /***BEGIN: 菜单栏位置固定***/
 const layoutScrollLockIcon = computed(() => {
   return layoutScrollLockStore().locked ? 'LayoutLock' : 'LayoutUnlock';
@@ -218,10 +219,10 @@ const logout = inject<() => void>('logout');
         <Breadcrumb.Link
           v-for="(m, index) in menuPath"
           :to="{ name: m.pageName }"
-          :active="m.pageName === $route.name"
+          :active="m.pageName === route.name"
           :index="index + 1"
-          :key="`breadcrumb-link-${index}-${m.title}-${m.pageName === $route.name}`"
-          :class="[{ 'pointer-events-none': !m.pageName || m.pageName === $route.name }]"
+          :key="`breadcrumb-link-${index}-${m.title}-${m.pageName === route.name}`"
+          :class="[{ 'pointer-events-none': !m.pageName || m.pageName === route.name }]"
         >
           <ul class="flex items-center">
             <li class="pr-1">
@@ -288,7 +289,7 @@ const logout = inject<() => void>('logout');
                   class="flex items-center"
                   @click="
                     () => {
-                      gotoMenu(v.menu, $router);
+                      gotoMenu(v.menu, router);
                     }
                   "
                 >
@@ -304,7 +305,7 @@ const logout = inject<() => void>('logout');
                     class="flex flex"
                     @click="
                       () => {
-                        gotoMenu(pv, $router);
+                        gotoMenu(pv, router);
                       }
                     "
                     href="#"
@@ -394,17 +395,15 @@ const logout = inject<() => void>('logout');
         <Menu.Items v-if="ucInfo.BasicInfo" class="w-56 mt-px relative bg-primary/80 before:block before:absolute before:bg-black before:inset-0 before:rounded-md before:z-[-1] text-white">
           <Menu.Header class="font-normal">
             <div class="font-medium">
-              <RouterLink :to="{ name: 'uc' }">{{ ucInfo.BasicInfo?.userName }}</RouterLink>
+              <RouterLink :to="{ name: 'uc' }">{{ ucInfo.BasicInfo?.name }}</RouterLink>
             </div>
             <div class="flex flex-col gap-y-1 text-xs mt-0.5">
-              <span class="text-white/70 dark:text-slate-400">
-                {{ ucInfo.BasicInfo?.postName }}
+              <span class="text-white/70 dark:text-slate-400"></span>
+              <span class="text-white/90 dark:text-slate-300">
+                <!-- {{ ucInfo.BasicInfo? }} -->
               </span>
               <span class="text-white/90 dark:text-slate-300">
-                {{ ucInfo.BasicInfo?.departmentName }}
-              </span>
-              <span class="text-white/90 dark:text-slate-300">
-                {{ ucInfo.BasicInfo?.unitName }}
+                <!-- {{ ucInfo.BasicInfo? }} -->
               </span>
             </div>
           </Menu.Header>
@@ -432,7 +431,7 @@ const logout = inject<() => void>('logout');
             class="hover:bg-white/5"
             @click="
               () => {
-                $router.push({ name: 'login' });
+                router.push({ name: 'login' });
               }
             "
           >

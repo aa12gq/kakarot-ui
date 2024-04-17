@@ -1,24 +1,25 @@
 <script setup lang="ts">
 import { useRoute } from "vue-router";
 import { twMerge } from "tailwind-merge";
+import logoUrl from "@/assets/images/logo.svg";
+import logo2Url from "@/assets/images/logo2.svg";
 import Devider from "./Devider.vue";
 import Menu from "./Menu.vue";
 import Lucide from "@/base-components/Lucide";
-import { useSideMenuStore } from "@/stores/side-menu";
-import { nestedMenu, enter, leave } from "@/components/SideMenu/side-menu";
-import type { FormattedMenu } from "@/components/SideMenu/side-menu";
+import { useSideMenuStore } from "@/stores/components/menu/side-menu";
+import {nestedMenu, enter, leave, FormattedMenuType} from "@/components/SideMenu/side-menu";
 import { watch, reactive, computed, onMounted, ref } from "vue";
 import SimpleBar from "simplebar";
 
 const route = useRoute();
-let formattedMenu = reactive<Array<FormattedMenu | "devider">>([]);
+let formattedMenu = reactive<Array<FormattedMenuType>>([]);
 const setFormattedMenu = (
-  computedFormattedMenu: Array<FormattedMenu | "devider">
+  computedFormattedMenu: Array<FormattedMenuType>
 ) => {
   Object.assign(formattedMenu, computedFormattedMenu);
 };
-const sideMenuStore = useSideMenuStore();
-const sideMenu = computed(() => nestedMenu(sideMenuStore.menu, route));
+const sideMenuStore = useSideMenuStore;
+const sideMenu = computed(() => nestedMenu(sideMenuStore.value.menu, route));
 
 const activeMobileMenu = ref(false);
 const setActiveMobileMenu = (active: boolean) => {
@@ -28,7 +29,7 @@ const setActiveMobileMenu = (active: boolean) => {
 const scrollableRef = ref<HTMLDivElement>();
 
 watch(sideMenu, () => {
-  setFormattedMenu(sideMenu.value);
+  // setFormattedMenu(sideMenu.value);
 });
 
 onMounted(() => {
@@ -44,20 +45,32 @@ onMounted(() => {
   <!-- BEGIN: Mobile Menu -->
   <div
     :class="[
-      'w-full fixed bg-primary/90 z-[60] border-b border-white/[0.08] -mt-5 -mx-3 sm:-mx-8 mb-6 dark:bg-darkmode-800/90 md:hidden',
+      'w-full fixed bg-primary/100 z-[60] border-b border-white/[0.08] -mt-5 -mx-3 sm:-mx-1 mb-6 dark:bg-darkmode-800/90 md:hidden',
       'before:content-[\'\'] before:w-full before:h-screen before:z-10 before:fixed before:inset-x-0 before:bg-black/90 before:transition-opacity before:duration-200 before:ease-in-out',
       !activeMobileMenu && 'before:invisible before:opacity-0',
       activeMobileMenu && 'before:visible before:opacity-100',
     ]"
   >
-    <div class="h-[70px] px-3 sm:px-8 flex items-center">
-      <a href="" class="flex mr-auto">
-        <!-- <img
+    <div class="h-[70px] px-3  flex items-center justify-between">
+      <a href="#">
+        <img
           alt=""
           class="w-6"
-          :src=""
-        /> -->
+          :src="logoUrl"
+        />
       </a>
+      <dl class="">
+        <dt>
+          <span class="ml-3 text-sm text-white"> 工程管理平台 </span>
+        </dt>
+        <dd class="ml-3 text-xs text-warning  pr-1">
+          <img
+              alt="为基集团"
+              class="w-12 float-right"
+              :src="logo2Url"
+          />
+        </dd>
+      </dl>
       <a href="#" @click="(e) => e.preventDefault()">
         <Lucide
           icon="BarChart2"

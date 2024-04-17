@@ -524,7 +524,7 @@ const SendCode = () => {
                 class="cursor-pointer"
                 @click="
                   () => {
-                    $router.push('/forget');
+                    router.push('/forget');
                   }
                 "
               >
@@ -548,7 +548,7 @@ const SendCode = () => {
               <Button
                 @click="
                   () => {
-                    $router.push('/');
+                    router.push('/');
                   }
                 "
                 variant="outline-primary"
