@@ -21,7 +21,7 @@ export const config: Config = {
       {
         // 根据实际系统部署进行配置，目前统一只配置"default"项即可.
         name: "default",
-        url: "http://localhost:3131",
+        url: "http://111.229.160.10:3131",
         timeout: 10,
       },
     ],
