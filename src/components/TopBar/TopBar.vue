@@ -45,15 +45,12 @@ export const toggleLayoutScroll = (lock?: boolean, noToggle?: boolean) => {
 <script setup lang="ts">
 import { computed, onMounted, ref, watch, inject, type Ref } from 'vue';
 import Lucide from '@/base-components/Lucide';
-import logoUrl from '@/assets/images/logo.svg';
-import logo2Url from '@/assets/images/logo2.svg';
 import iconApps from '@/assets/images/apps.svg';
 import Breadcrumb from '@/base-components/Breadcrumb';
 import { FormInput } from '@/base-components/Form';
 import { Menu, Popover } from '@/base-components/Headless';
 import { TransitionRoot } from '@headlessui/vue';
 import ErrorNotification from './ErrorNotification.vue';
-import logo from '@/assets/svg/LogoLight.vue';
 import { type Menu as SideMenu, useSideMenuStore, menuInTrees, findMenusWithPath, MenuWithPath } from '@/stores/components/menu/side-menu';
 import { gotoMenu } from '@/components/SideMenu';
 import SideMenuTooltip from '@/components/SideMenu/SideMenuTooltip.vue';
