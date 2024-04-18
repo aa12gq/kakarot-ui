@@ -214,10 +214,10 @@ function GetUserName(id: bigint[]) {
     />
     <div class="box">
       <div class="flex-row-reverse ml-2 mt-3">
-        <Button variant="primary" class="inline w-24 mb-2 mr-3 mt-3" @click="setAddModalPreview(true)">新增</Button>
-        <Button variant="primary" class="inline w-24 mb-2 mr-3" @click="setAddModalPreview(true, true)">编辑</Button>
-        <Button variant="danger" class="inline w-24 mb-2 mr-3" @click="setDeleteModal(true)">删除</Button>
-        <Button variant="primary" class="inline w-24 mb-2 mr-3" @click="setRoleModalPreview(true)">权限设置</Button>
+        <Button variant="primary" class="inline w-24 mb-2 mr-3 mt-3 py-1" @click="setAddModalPreview(true)">新增</Button>
+        <Button variant="primary" class="inline w-24 mb-2 mr-3 py-1" :disabled="checkedRole.id < 1" @click="setAddModalPreview(true, true)">编辑</Button>
+        <Button variant="danger" class="inline w-24 mb-2 mr-3 py-1" :disabled="checkedRole.id < 1" @click="setDeleteModal(true)">删除</Button>
+        <Button variant="primary" class="inline w-24 mb-2 mr-3 py-1" :disabled="checkedRole.id < 1" @click="setRoleModalPreview(true)">权限设置</Button>
       </div>
       <div class="overflow-x-auto w-full box mt-3">
         <Table class="table">

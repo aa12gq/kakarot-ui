@@ -7,6 +7,9 @@ import UcHomeView from '@/apps/uc/Home.vue';
 import LoginView from '@/apps/login/Login.vue';
 import _404 from '@/apps/_404.vue';
 
+import SystemUser from '@/apps/system/User.vue';
+import SystemRole from '@/apps/system/Role.vue';
+
 import UcProfileView from '@/apps/uc/Profile.vue';
 import UcPasswordView from '@/apps/uc/Password.vue';
 import WsccRegisterView from '@/apps/wscc/ScanTask.vue';
@@ -69,6 +72,16 @@ const router = createRouter({
           meta: {
             keepAlive: true,
           },
+        },
+        {
+          name: 'system-user',
+          component: SystemUser,
+          path: '/system/user',
+        },
+        {
+          name: 'system-role',
+          component: SystemRole,
+          path: '/system/role',
         },
       ],
     },

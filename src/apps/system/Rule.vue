@@ -23,8 +23,7 @@ function convertTreeSelectNodes(nodes: MenuResource[], parent?: treeSelectNode) 
     treeSelectNodes.value = [
       {
         id: 0,
-        label:
-          '<span class="text-xs sa-pri-notify relative hover:bg-warning/80 bg-danger/80 p-1 rounded text-white">* 超管员权限<div class=\'fixed hidden ml-[7.6rem] mt-[-50px] w-[8rem] whitespace-normal bg-slate-900/70 dark:bg-darkmode-600/90 text-warning rounded p-5 z-[9991] shadow-md\'>选中此项后,此用户组的用户将拥有超级管理员权限！</div></div></span>',
+        label: `超级管理员权限`,
       },
     ];
   }
