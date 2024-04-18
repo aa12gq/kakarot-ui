@@ -186,8 +186,8 @@ ListUsers();
 function GetUserName(id: bigint[]) {
   let name: string[] = [];
   users.forEach((item: any) => {
-    if (id.indexOf(item.data?.id) != -1) {
-      name.push(item.data?.fullName);
+    if (id.indexOf(item?.id) != -1) {
+      name.push(item?.fullName);
     }
   });
   return name;

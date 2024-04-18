@@ -461,11 +461,11 @@ const dsize = ref<any>('lg');
             </Table.Th>
             <Table.Th>ID</Table.Th>
             <Table.Th>用户名</Table.Th>
-            <Table.Th>姓名</Table.Th>
+            <Table.Th>昵称</Table.Th>
             <Table.Th>联系电话</Table.Th>
             <Table.Th>电子邮箱</Table.Th>
-            <Table.Th>是否启用</Table.Th>
-            <Table.Th>角色</Table.Th>
+            <Table.Th>账号状态</Table.Th>
+            <Table.Th>用户角色</Table.Th>
           </Table.Tr>
         </Table.Thead>
         <!-- body -->
