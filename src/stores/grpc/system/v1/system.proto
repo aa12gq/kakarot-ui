@@ -3,6 +3,7 @@ syntax = "proto3";
 package com.kakarot.system.grpc.v1;
 
 import "google/api/annotations.proto";
+import "google/protobuf/timestamp.proto";
 import "protoc-gen-openapiv2/options/annotations.proto";
 
 option go_package = "proto/system/v1;v1";
@@ -115,8 +116,22 @@ message User {
     string username = 2;
     string password = 3;
     repeated uint64 roles = 4;
-    string name =5;
+    string full_name = 5;
     string phone = 6;
+    string email = 7;
+    // 最后登录时间
+    google.protobuf.Timestamp last_login_at = 8;
+    // 登录次数
+    int32 login_count = 9;
+    // 状态
+    SystemUserStatus status = 10;
+}
+
+enum SystemUserStatus {
+    // 启用
+    enable = 0;
+    // 禁用
+    disable = 1;
 }
 
 message UserRequest {
@@ -157,7 +172,8 @@ message RoleIdRequest {
 
 message RoleToUserRequest {
     repeated uint64 role_ids = 1;
-    repeated uint64 user_ids = 2;//system user_id
+    // 系统用户ID user_id
+    repeated uint64 system_user_ids = 2;
 }
 
 message RuleToRoleRequest {

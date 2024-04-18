@@ -178,7 +178,7 @@ onMounted(() => {
       </FormInline>
       <FormInline>
         <FormLabel class="sm:w-[7rem]">姓名:</FormLabel>
-        <span>{{ formData.name }}</span>
+        <span>{{ formData.fullName }}</span>
       </FormInline>
       <!-- <FormInline>
         <FormLabel class="sm:w-[7rem]">性别:</FormLabel>

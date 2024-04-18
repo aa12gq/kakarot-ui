@@ -41,7 +41,14 @@ export const ucStore = defineStore(ST_KEY, {
             return new Promise<UcInfo>((success, fail) => {
                 BasicUserInfo((info) => {
                     if(info.basicInfo){
-                        this.setBasicInfo(info.basicInfo);
+                        this.setBasicInfo(User.create({
+                            id: info.basicInfo.id,
+                            username: info.basicInfo.userName,
+                            email: info.basicInfo.email,
+                            phone: info.basicInfo.phone,
+                            roles: info.basicInfo.roles,
+                        
+                        }));
                     } else {
                         fail({message:"未获取到用户基础信息", code: "unknown"});
                     }

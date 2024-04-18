@@ -2,6 +2,7 @@
 import { Alert } from "@/base-components/Alert";
 import { Variant } from "@/base-components/Alert/Types";
 import Lucide, { type Icon } from "@/base-components/Lucide";
+import { defineExpose, ref } from "vue";
 
 interface Option {
   msg: string;

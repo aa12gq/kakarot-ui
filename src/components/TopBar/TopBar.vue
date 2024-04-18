@@ -392,7 +392,7 @@ const logout = inject<() => void>('logout');
         <Menu.Items v-if="ucInfo.BasicInfo" class="w-56 mt-px relative bg-primary/80 before:block before:absolute before:bg-black before:inset-0 before:rounded-md before:z-[-1] text-white">
           <Menu.Header class="font-normal">
             <div class="font-medium">
-              <RouterLink :to="{ name: 'uc' }">{{ ucInfo.BasicInfo?.name }}</RouterLink>
+              <RouterLink :to="{ name: 'uc' }">{{ ucInfo.BasicInfo?.fullName }}</RouterLink>
             </div>
             <div class="flex flex-col gap-y-1 text-xs mt-0.5">
               <span class="text-white/70 dark:text-slate-400"></span>

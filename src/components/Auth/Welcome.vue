@@ -25,11 +25,11 @@ const uc = ucStore();
                     duration: 2000
                   }" class="flex py-5 pl-5">
     <div class="flex-none w-10 h-10 overflow-hidden rounded-full image-fit">
-      <img :alt="`${uc.BasicInfo.name}的头像`" :src="userAvatar" />
+      <img :alt="`${uc.BasicInfo.fullName}的头像`" :src="userAvatar" />
     </div>
     <div class="ml-4 sm:mr-28">
       <div class="font-medium">
-        {{ uc.BasicInfo?.name}}
+        {{ uc.BasicInfo?.fullName}}
       </div>
       <div class="font-medium">
        

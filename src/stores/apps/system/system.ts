@@ -23,7 +23,7 @@ function AddRoleToUser(roleIds: bigint[], userIds: bigint[], hrUserIds: bigint[]
   let c = GetClient(SystemClient).addRoleToUser(
     RoleToUserRequest.create({
       roleIds: roleIds,
-      userIds: userIds,
+      systemUserIds: userIds,
     })
   );
   return c.response.then(re => {

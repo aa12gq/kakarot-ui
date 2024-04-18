@@ -22,7 +22,7 @@ const menus = cm?.subMenu;
           </div>
           <div class="ml-4 mr-auto">
             <div class="text-base font-medium">
-              <RouterLink :to="{ name: 'uc' }">{{ ucStore().BasicInfo?.name }}</RouterLink>
+              <RouterLink :to="{ name: 'uc' }">{{ ucStore().BasicInfo?.fullName }}</RouterLink>
             </div>
           </div>
         </div>

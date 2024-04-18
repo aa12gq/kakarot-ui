@@ -3,7 +3,7 @@
 import _, { forEach } from 'lodash';
 import { ref, reactive, computed } from 'vue';
 import Button from '@/base-components/Button';
-import { FormInput, FormLabel, FormSelect, FormInline, FormCheck } from '@/base-components/Form';
+import { FormInput, FormLabel, FormSelect, FormInline, FormCheck, FormSwitch } from '@/base-components/Form';
 import { useRouter } from 'vue-router';
 import { GetClient } from '@/components/Grpc/grpc';
 import type { BaseReply, UserListReply } from '@/stores/grpc/system/v1/system';
@@ -16,7 +16,7 @@ import { Menu, Tab, Dialog } from '@/base-components/Headless';
 import Rule from '@/apps/system/Rule.vue';
 import PagingDevice from '@/components/PagingDevice/PagingDevice.vue';
 import { BaseOption } from '@/components/PagingDevice';
-import { UserListRequest } from '@/stores/grpc/system/v1/system';
+import { UserListRequest, User } from '@/stores/grpc/system/v1/system';
 import TomSelect from '@/components/TomSelect';
 
 const searchTypeValue = ['用户名或姓名', '用户名', '联系电话'];
@@ -172,7 +172,7 @@ const openClick = (open: boolean = true) => {
 };
 
 const editModalPreview = ref(false);
-const editPanel = ref<any>();
+const editPanel = ref<User>(User.create());
 
 const seteditModalPreview = (v: boolean) => {
   if (ids.value.length != 1) {
@@ -291,10 +291,18 @@ const dsize = ref<any>('lg');
       </div>
       <div>
         <div class="flex-row-reverse ml-2 mt-3">
-          <Button variant="primary" class="inline w-24 mb-2 mr-3 py-1" @click="openClick()" :disabled="ids.length != 1">启用</Button>
-          <Button variant="warning" class="inline w-24 mb-2 mr-3 py-1" @click="openClick(false)" :disabled="ids.length != 1">禁用</Button>
-          <Button variant="primary" class="inline w-24 mb-2 mr-3 py-1" @click="seteditModalPreview(true)" :disabled="ids.length != 1">修改</Button>
-          <Button variant="primary" class="inline w-24 mb-2 mr-3 py-1" @click="setroleModalPreview(true)" :disabled="ids.length != 1">设置角色</Button>
+          <Button variant="primary" class="w-24 mb-2 mr-3 py-1">
+            <Lucide icon="PlusSquare" class="w-4 h-4 mr-1" />
+            添加
+          </Button>
+          <Button variant="secondary" class="w-24 mb-2 mr-3 py-1" @click="seteditModalPreview(true)" :disabled="ids.length != 1">
+            <Lucide icon="Edit" class="w-4 h-4 mr-1" />
+            修改
+          </Button>
+          <Button variant="primary" class="w-24 mb-2 mr-3 py-1 min-w-fit" @click="setroleModalPreview(true)" :disabled="ids.length != 1">
+            <div class="h-4"></div>
+            设置角色
+          </Button>
         </div>
       </div>
     </div>
@@ -317,16 +325,20 @@ const dsize = ref<any>('lg');
         </Dialog.Title>
         <Dialog.Description class="grid gap-4 gap-y-3">
           <FormInline class="flex-1">
-            <FormLabel htmlFor="horizontal-form-1">用户姓名:</FormLabel>
+            <FormLabel htmlFor="horizontal-form-1">用户名:&nbsp;&nbsp;&nbsp;</FormLabel>
             {{ editPanel.username }}
           </FormInline>
           <FormInline class="flex-1">
+            <FormLabel htmlFor="horizontal-form-1">姓名:&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;</FormLabel>
+            <FormInput id="1" class="w-3/4" type="text" v-model="editPanel.fullName" />
+          </FormInline>
+          <FormInline class="flex-1">
             <FormLabel htmlFor="horizontal-form-1">手机号码:</FormLabel>
-            <FormInput id="1" class="w-3/4" type="text" v-model="editPanel.phoneNumber" />
+            <FormInput id="1" class="w-3/4" type="text" v-model="editPanel.phone" />
           </FormInline>
           <FormInline class="flex-1">
             <FormLabel htmlFor="horizontal-form-1">电子邮箱:</FormLabel>
-            <FormInput id="1" class="w-3/4" type="text" v-model="editPanel.mailingAddress" />
+            <FormInput id="1" class="w-3/4" type="text" v-model="editPanel.email" />
           </FormInline>
           <FormInline class="flex-1">
             <FormLabel htmlFor="horizontal-form-1">用户密码:</FormLabel>
@@ -385,9 +397,9 @@ const dsize = ref<any>('lg');
         </Dialog.Title>
         <Dialog.Description>
           <div class="box grid grid-cols-5 gap-4 gap-y-3">
-            <Button v-for="data in _.take(rolePanel, rolePanel?.length)" @click="getTheSelectedOne(data, true)">
+            <Button v-for="data in _.take(rolePanel, rolePanel?.length)" @click="getTheSelectedOne(data, true)" class="whitespace-nowrap min-w-fit">
               {{ data.name }}
-              <Lucide class="w-[20px] font-bold text-[#DC143C] text-sm" icon="XCircle" />
+              <div class="ml-1"><Lucide class="w-3 h-3 font-bold text-[#DC143C]" icon="XCircle" /></div>
             </Button>
           </div>
           <div class="mt-3 grid grid-cols-5 gap-4 gap-y-3">
@@ -429,7 +441,7 @@ const dsize = ref<any>('lg');
       </Dialog.Panel>
     </Dialog>
 
-    <div class="overflow-x-auto w-full box mt-3">
+    <div class="overflow-x-auto w-full box mt-2">
       <Table class="table w-full">
         <!-- head -->
         <Table.Thead>
@@ -440,17 +452,18 @@ const dsize = ref<any>('lg');
                   class="form-check checked:border-primary checkbox bg-white box-border w-[14px] h-[14px]"
                   type="checkbox"
                   @click="
-                    e => {
+                    (e: Event) => {
                       checkAll(e);
                     }
                   "
                 />
               </label>
             </Table.Th>
-            <Table.Th>NO.</Table.Th>
+            <Table.Th>ID</Table.Th>
             <Table.Th>用户名</Table.Th>
-            <Table.Th>联系电话</Table.Th>
             <Table.Th>姓名</Table.Th>
+            <Table.Th>联系电话</Table.Th>
+            <Table.Th>电子邮箱</Table.Th>
             <Table.Th>是否启用</Table.Th>
             <Table.Th>角色</Table.Th>
           </Table.Tr>
@@ -463,11 +476,31 @@ const dsize = ref<any>('lg');
                 <FormCheck.Input class="form-check checked:border-primary checkbox bg-white box-border w-[14px] h-[14px]" type="checkbox" v-model="ids" :value="data" />
               </label>
             </Table.Td>
-            <Table.Td>{{ index + 1 + (page - 1) * pageSize }}</Table.Td>
+            <Table.Td>{{ data.id }}</Table.Td>
             <Table.Td>{{ data.username }}</Table.Td>
+            <Table.Td>{{ data.fullName }}</Table.Td>
             <Table.Td>{{ data.phone }}</Table.Td>
-            <Table.Td>{{ data.name }}</Table.Td>
-            <Table.Td>{{ data.frozen == 0 ? '启用' : '禁用' }}</Table.Td>
+            <Table.Td>{{ data.email }}</Table.Td>
+            <Table.Td>
+              <FormSwitch
+                class="switch relative flex text-[0.5rem]"
+                v-model="data.status"
+                @click="
+                  (event:any) => {
+                    event.preventDefault();
+                  }
+                "
+              >
+                <span v-if="data.status != 0" class="switch-label !text-[0.6rem] whitespace-no-wrap font-bold dark:text-gray-500 ml-5 z-10 !text-gray-500 cursor-pointer"></span>
+                <span v-else class="switch-label !text-[0.6rem] whitespace-no-wrap font-bold dark:text-gray-200 !text-gray-200 z-10 cursor-pointer"></span>
+                <FormSwitch.Input
+                  type="checkbox"
+                  :checked="!(data.status as any)"
+                  class="w-[64px] h-[24px] before:checked:ml-[39px] before:checked:bg-white checked:bg-red-500"
+                  :class="!data.status ? 'opacity-75' : ''"
+                ></FormSwitch.Input>
+              </FormSwitch>
+            </Table.Td>
             <Table.Td>{{ getRoleName(data.roles) }}</Table.Td>
           </Table.Tr>
         </Table.Tbody>

@@ -7,28 +7,41 @@ OUT_DIR=./src/stores/grpc
 SEARCH_PATH="src/stores/grpc"
 # 如果提供了第一个参数，调整搜索路径
 if [ ! -z "$1" ]; then
-    SEARCH_PATH="${SEARCH_PATH}$1"
+    SEARCH_PATH="${SEARCH_PATH}/$1"
 fi
 
 # 查找文件的正则表达式
 PROTO_PATH_PATTERN="$SEARCH_PATH/.*\.proto$"
 if [ ! -z "$2" ]; then
-    PROTO_PATH_PATTERN="$PROTO_PATH_PATTERN|$SEARCH_PATH/third_party/$2/.*\.proto$"
+    PROTO_PATH_PATTERN="${PROTO_PATH_PATTERN}|$SEARCH_PATH/third_party/$2/.*\.proto$"
 fi
 
-# 查找.proto文件
+# 确保搜索目录存在
+if [ ! -d "$SEARCH_PATH" ]; then
+    echo "指定的目录不存在: $SEARCH_PATH"
+    exit 1
+fi
+
 API_PROTO_FILES=$(find $SEARCH_PATH -regex "$PROTO_PATH_PATTERN")
 
+if [ -z "$API_PROTO_FILES" ]; then
+    echo "在$SEARCH_PATH下未找到任何.proto文件"
+    exit 1
+fi
+
 for proto in $API_PROTO_FILES; do
-    echo "compling $proto..."
+    echo "正在编译 $proto..."
     $NODE_BIN_PATH/protoc \
     --proto_path=${OUT_DIR} \
     --proto_path=${OUT_DIR}/third_party \
     --ts_out=${OUT_DIR} \
     $proto
     if [ $? -eq 0 ]; then
-        echo "ok."
+        echo "$proto 编译成功。"
     else
-        echo "compling failed $proto"
+        echo "编译失败 $proto"
+        exit 1
     fi
 done
+
+echo "所有文件编译完成。"
