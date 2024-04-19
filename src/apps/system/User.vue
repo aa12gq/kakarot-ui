@@ -6,25 +6,24 @@ import Button from '@/base-components/Button';
 import { FormInput, FormLabel, FormSelect, FormInline, FormCheck, FormSwitch } from '@/base-components/Form';
 import { useRouter } from 'vue-router';
 import { GetClient } from '@/components/Grpc/grpc';
-import type { BaseReply, UserListReply } from '@/stores/grpc/system/v1/system';
+import type { BaseReply, UserListReply, UserIdRequest, UserReply } from '@/stores/grpc/system/v1/system';
 import { Alerts, type AlertMessage, SetAlertMessages } from '@/base-components/Alert';
 import * as sys from '@/stores/apps/system/system';
 import Table from '@/base-components/Table';
-import Lucide from '@/base-components/Lucide';
+import Lucide, { Icon } from '@/base-components/Lucide';
 import Pagination from '@/base-components/Pagination';
 import { Menu, Tab, Dialog } from '@/base-components/Headless';
 import Rule from '@/apps/system/Rule.vue';
 import PagingDevice from '@/components/PagingDevice/PagingDevice.vue';
 import { BaseOption } from '@/components/PagingDevice';
 import { UserListRequest, User } from '@/stores/grpc/system/v1/system';
-import TomSelect from '@/components/TomSelect';
+import { yup } from '@/base-components/I18n-validators';
 
 const searchTypeValue = ['用户名或姓名', '用户名', '联系电话'];
+// 操作类型 1:添加 0:修改
+const controlType = ref(0);
 
-let data = [
-  { value: '全部', options: 0 },
-  { value: 'todo', options: 1 },
-];
+let data = [{ value: '全部', options: 0 }];
 const data1 = ref('0');
 const ids = ref<any[]>([]);
 const idAll = ref<any[]>([]);
@@ -96,15 +95,44 @@ function ReListTableUser() {
 }
 ReListTableUser();
 
+const validator = yup.object({
+  username: yup.string().label('系统账号').trim().required(),
+  password: yup.string().label('登录密码').trim().min(6).required(),
+  fullName: yup.string().label('用户昵称').trim().required(),
+});
+const errors = yup.toSchemaErrors(validator, []);
+
 function SaveUser() {
-  sys.UpdateUser(
-    editPanel.value,
-    (d: BaseReply) => {
-      SetAlertMessages(infoAlerts, [{ index: 0n, message: '修改成功' }]);
-      ReListTableUser();
+  validator.validate(formData.value, { abortEarly: false }).then(
+    () => {
+      yup.toSchemaErrors(validator, [], errors);
+      if (controlType.value == 1) {
+        sys.AddUser(
+          formData.value,
+          (d: BaseReply) => {
+            SetAlertMessages(infoAlerts, [{ index: 0n, message: '添加成功' }]);
+            ReListTableUser();
+          },
+          (why: any) => {
+            SetAlertMessages(warningAlerts, [{ index: 0n, message: why.code + ': ' + why.message }]);
+          }
+        );
+      } else {
+        sys.UpdateUser(
+          formData.value,
+          (d: BaseReply) => {
+            SetAlertMessages(infoAlerts, [{ index: 0n, message: '修改成功' }]);
+            ReListTableUser();
+          },
+          (why: any) => {
+            SetAlertMessages(warningAlerts, [{ index: 0n, message: why.code + ': ' + why.message }]);
+          }
+        );
+      }
+      setFormModalPreview(false);
     },
-    (why: any) => {
-      SetAlertMessages(warningAlerts, [{ index: 0n, message: why.code + ': ' + why.message }]);
+    err => {
+      yup.toSchemaErrors(validator, err.inner, errors);
     }
   );
 }
@@ -172,7 +200,7 @@ const openClick = (open: boolean = true) => {
 };
 
 const editModalPreview = ref(false);
-const editPanel = ref<User>(User.create());
+const formData = ref<User>(User.create());
 
 const seteditModalPreview = (v: boolean) => {
   if (ids.value.length != 1) {
@@ -180,9 +208,9 @@ const seteditModalPreview = (v: boolean) => {
     return;
   }
   if (v) {
-    editPanel.value = ids.value[0];
+    formData.value = ids.value[0];
   } else {
-    //editPanel.value = null;
+    //formData.value = null;
   }
   editModalPreview.value = v;
 };
@@ -271,6 +299,36 @@ const buttonClickCss = computed(() => {
 // button function end//
 
 const dsize = ref<any>('lg');
+
+// 添加系统用户
+let formDialogIcon: Icon = 'PlusSquare';
+const formModelPreview = ref(false);
+const setFormModalPreview = (value: boolean, isAdd?: boolean) => {
+  if (value && !isAdd) {
+    // 仅在打开对话框且是修改操作时执行
+    formDialogIcon = 'Edit';
+    controlType.value = 0;
+    if (ids.value && ids.value.length > 0 && ids.value[0]) {
+      sys.QueryUser(
+        ids.value[0].id,
+        (d: UserReply) => {
+          formData.value = d.data!;
+        },
+        (why: any) => {
+          SetAlertMessages(warningAlerts, [{ index: 0n, message: why.code + ': ' + why.message }]);
+        }
+      );
+    } else {
+      SetAlertMessages(warningAlerts, [{ index: 0n, message: '请选择一条数据' }]);
+    }
+  } else if (!value) {
+    // 当关闭对话框时，无需任何检查
+    formDialogIcon = 'PlusSquare';
+    controlType.value = 1;
+    formData.value = User.create();
+  }
+  formModelPreview.value = value;
+};
 </script>
 
 <template>
@@ -291,11 +349,20 @@ const dsize = ref<any>('lg');
       </div>
       <div>
         <div class="flex-row-reverse ml-2 mt-3">
-          <Button variant="primary" class="w-24 mb-2 mr-3 py-1">
+          <Button
+            variant="primary"
+            class="w-24 mb-2 mr-3 py-1"
+            @click="
+              () => {
+                setFormModalPreview(true, true);
+                controlType = 1;
+              }
+            "
+          >
             <Lucide icon="PlusSquare" class="w-4 h-4 mr-1" />
             添加
           </Button>
-          <Button variant="secondary" class="w-24 mb-2 mr-3 py-1" @click="seteditModalPreview(true)" :disabled="ids.length != 1">
+          <Button variant="secondary" class="w-24 mb-2 mr-3 py-1" @click="setFormModalPreview(true, false)" :disabled="ids.length != 1">
             <Lucide icon="Edit" class="w-4 h-4 mr-1" />
             修改
           </Button>
@@ -306,82 +373,6 @@ const dsize = ref<any>('lg');
         </div>
       </div>
     </div>
-
-    <Dialog
-      :open="editModalPreview"
-      @close="
-        () => {
-          seteditModalPreview(false);
-        }
-      "
-      :size="dsize"
-    >
-      <Dialog.Panel>
-        <Dialog.Title>
-          <h2 class="flex mr-auto text-base font-medium">
-            <Lucide icon="Edit" class="w-6 h-6 mr-1" />
-            用户信息
-          </h2>
-        </Dialog.Title>
-        <Dialog.Description class="grid gap-4 gap-y-3">
-          <FormInline class="flex-1">
-            <FormLabel htmlFor="horizontal-form-1">用户名:&nbsp;&nbsp;&nbsp;</FormLabel>
-            {{ editPanel.username }}
-          </FormInline>
-          <FormInline class="flex-1">
-            <FormLabel htmlFor="horizontal-form-1">姓名:&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;</FormLabel>
-            <FormInput id="1" class="w-3/4" type="text" v-model="editPanel.fullName" />
-          </FormInline>
-          <FormInline class="flex-1">
-            <FormLabel htmlFor="horizontal-form-1">手机号码:</FormLabel>
-            <FormInput id="1" class="w-3/4" type="text" v-model="editPanel.phone" />
-          </FormInline>
-          <FormInline class="flex-1">
-            <FormLabel htmlFor="horizontal-form-1">电子邮箱:</FormLabel>
-            <FormInput id="1" class="w-3/4" type="text" v-model="editPanel.email" />
-          </FormInline>
-          <FormInline class="flex-1">
-            <FormLabel htmlFor="horizontal-form-1">用户密码:</FormLabel>
-            <FormCheck class="mr-2 ml-4">
-              <FormCheck.Input id="radio-switch-4" type="radio" name="horizontal_radio_button" />
-              <FormCheck.Label htmlFor="radio-switch-4">当前密码</FormCheck.Label>
-            </FormCheck>
-            <FormCheck class="mt-2 mr-2 sm:mt-0">
-              <FormCheck.Input id="radio-switch-5" type="radio" name="horizontal_radio_button" value="123456" />
-              <FormCheck.Label htmlFor="radio-switch-5">初始密码</FormCheck.Label>
-            </FormCheck>
-          </FormInline>
-        </Dialog.Description>
-        <Dialog.Footer>
-          <Button
-            variant="primary"
-            type="button"
-            class="w-20"
-            @click="
-              () => {
-                SaveUser();
-                seteditModalPreview(false);
-              }
-            "
-          >
-            确认
-          </Button>
-          <Button
-            variant="primary"
-            type="button"
-            class="w-20 ml-4"
-            @click="
-              () => {
-                seteditModalPreview(false);
-              }
-            "
-          >
-            取消
-          </Button>
-        </Dialog.Footer>
-      </Dialog.Panel>
-    </Dialog>
-
     <Dialog
       :open="roleModalPreview"
       @close="
@@ -508,4 +499,111 @@ const dsize = ref<any>('lg');
     </div>
     <PagingDevice :total="table_user?.total" @handleChangePageSize="changePageSize" @handleChangePage="changePage" ref="pagingRef" :options="BaseOption" />
   </div>
+
+  <Dialog
+    :open="formModelPreview"
+    @close="
+      () => {
+        setFormModalPreview(false);
+      }
+    "
+  >
+    <Dialog.Panel>
+      <Dialog.Title>
+        <h2 class="flex items-center text-base font-medium">
+          <Lucide :icon="formDialogIcon" class="w-6 h-6 mr-1" />
+          {{ controlType == 1 ? '添加' : '修改' }}系统用户信息
+        </h2>
+      </Dialog.Title>
+      <Dialog.Description>
+        <div class="space-y-5">
+          <FormInline class="flex items-center">
+            <FormLabel htmlFor="horizontal-form-1" class="w-1/4 required-label">系统用户名</FormLabel>
+            <div class="relative w-3/4">
+              <FormInput id="1" type="text" v-model="formData.username" placeholder="请输入系统用户名(可用于系统账号登录)" />
+              <template v-if="errors.username.errors">
+                <div v-for="(error, index) in errors.username.errors" :key="index" class="absolute text-danger">
+                  {{ error.message }}
+                </div>
+              </template>
+            </div>
+          </FormInline>
+          <FormInline class="flex items-center">
+            <FormLabel htmlFor="horizontal-form-1" class="w-1/4 required-label">用户昵称</FormLabel>
+            <div class="w-3/4 relative">
+              <FormInput id="2" class="" type="text" v-model="formData.fullName" placeholder="请输入昵称" />
+            <template v-if="errors.fullName.errors">
+              <div v-for="(error, index) in errors.fullName.errors" :key="index" class="absolute text-danger">
+                {{ error.message }}
+              </div>
+            </template>
+            </div>
+            
+          </FormInline>
+          <FormInline class="flex items-center">
+            <FormLabel htmlFor="horizontal-form-1" class="w-1/4 required-label">电子邮箱</FormLabel>
+            <FormInput id="3" class="w-3/4" type="email" v-model="formData.email" placeholder="例如：test@example.com" />
+          </FormInline>
+          <FormInline class="flex items-center">
+            <FormLabel htmlFor="horizontal-form-1" class="w-1/4 required-label">联系电话</FormLabel>
+            <FormInput id="4" class="w-3/4" type="text" v-model="formData.phone" placeholder="请输入有效的联系电话" />
+          </FormInline>
+          <FormInline class="flex items-center">
+            <FormLabel htmlFor="horizontal-form-1" class="w-1/4">是否启用</FormLabel>
+            <FormInput id="5" class="w-3/4" type="text" v-model="formData.status" placeholder="启用或不启用" />
+          </FormInline>
+          <!-- <FormInline class="flex items-center">
+            <FormLabel htmlFor="horizontal-form-1" class="w-1/4">用户角色</FormLabel>
+            <FormInput id="6" class="w-3/4" type="text" v-model="formData.roles" placeholder="分配角色" />
+          </FormInline> -->
+          <FormInline class="flex items-center">
+            <FormLabel htmlFor="horizontal-form-1" class="w-1/4 required-label">密码</FormLabel>
+            <div class="w-3/4 relative">
+              <FormInput id="7" :type="controlType == 1 ? 'password' : 'text'" v-model="formData.password" placeholder="设置登录密码" />
+            <template v-if="errors.password.errors">
+              <div v-for="(error, index) in errors.password.errors" :key="index" class="absolte text-danger">
+                {{ error.message }}
+              </div>
+            </template>
+            </div>
+            
+          </FormInline>
+        </div>
+      </Dialog.Description>
+      <Dialog.Footer class="flex justify-end space-x-4">
+        <Button
+          variant="primary"
+          type="button"
+          class="w-20"
+          @click="
+            () => {
+              SaveUser();
+            }
+          "
+        >
+          确认
+        </Button>
+        <Button
+          variant="secondary"
+          type="button"
+          class="w-20"
+          @click="
+            () => {
+              setFormModalPreview(false);
+            }
+          "
+        >
+          取消
+        </Button>
+      </Dialog.Footer>
+    </Dialog.Panel>
+  </Dialog>
 </template>
+
+<style scoped>
+.required-label::before {
+  content: '*';
+  color: red;
+  margin-left: 4px;
+}
+</style>

@@ -73,6 +73,13 @@ function UpdateUser(req: User, success: (value: BaseReply) => void, fail?: (why:
   }, fail);
 }
 
+function QueryUser(id: bigint, success: (value: UserReply) => void, fail?: (why: any) => void): Promise<void> {
+  let c = GetClient(SystemClient).queryUser(UserIdRequest.create({ id: id }));
+  return c.response.then(re => {
+    success(re);
+  }, fail);
+}
+
 function DeleteUser(id: bigint, success: (value: BaseReply) => void, fail?: (why: any) => void): Promise<void> {
   let c = GetClient(SystemClient).deleteUser(UserIdRequest.create({ id: id }));
   return c.response.then(re => {
@@ -104,4 +111,4 @@ export interface userListReq {
   username: string;
 }
 
-export { AddRoleToUser, AddRole, UpdateRole, DeleteRole, QueryRoleList, AddUser, UpdateUser, DeleteUser, QueryUserList };
+export { AddRoleToUser, AddRole, UpdateRole, DeleteRole, QueryRoleList, AddUser, UpdateUser, QueryUser, DeleteUser, QueryUserList };

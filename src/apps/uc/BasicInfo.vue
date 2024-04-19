@@ -186,14 +186,14 @@ onMounted(() => {
       </FormInline> -->
     </div>
     <div class="grid grid-cols-1 gap-y-1 xl:grid-cols-3 pr-5">
-      <!-- <FormInline>
-        <FormLabel class="sm:w-[7rem]">身份证号:</FormLabel>
-        <span>{{ formData.idCard }}</span>
-      </FormInline> -->
-      <!-- <FormInline>
-        <FormLabel class="sm:w-[7rem]">出生日期:</FormLabel>
-        <span>{{ formData.birthDate && formData.birthDate.seconds > 0 ? formatDate(pbTimestamp2Date(formData.birthDate), DateFormat_1) : '未知' }}</span>
-      </FormInline> -->
+      <FormInline>
+        <FormLabel class="sm:w-[7rem]">登录次数:</FormLabel>
+        <span>{{ formData.loginCount }}</span>
+      </FormInline>
+      <FormInline>
+        <FormLabel class="sm:w-[7rem]">最后登录时间:</FormLabel>
+        <span>{{ formData.lastLoginAt && formData.lastLoginAt.seconds > 0 ? formatDate(pbTimestamp2Date(formData.lastLoginAt), DateFormat_1) : '未知' }}</span>
+      </FormInline>
     </div>
     <div class="grid grid-cols-1 gap-y-1 xl:grid-cols-3 pr-5">
       <FormInline>

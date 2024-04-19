@@ -218,6 +218,7 @@ function GetUserName(id: bigint[]) {
         <Button variant="primary" class="inline w-24 mb-2 mr-3 py-1" :disabled="checkedRole.id < 1" @click="setAddModalPreview(true, true)">编辑</Button>
         <Button variant="danger" class="inline w-24 mb-2 mr-3 py-1" :disabled="checkedRole.id < 1" @click="setDeleteModal(true)">删除</Button>
         <Button variant="primary" class="inline w-24 mb-2 mr-3 py-1" :disabled="checkedRole.id < 1" @click="setRoleModalPreview(true)">权限设置</Button>
+        <Button variant="primary" class="inline w-24 mb-2 mr-3 py-1" @click="ReListTable()">刷新</Button>
       </div>
       <div class="overflow-x-auto w-full box mt-3">
         <Table class="table">
