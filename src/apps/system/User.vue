@@ -253,16 +253,16 @@ function SaveRole() {
   getTheSelectedOne('', true);
 }
 
-function getRoleName(ids: bigint[]) {
-  let ret: any[] = [];
+function getRoleName(ids: bigint[]): string {
+  let roleNamesHtml: string = '';
   ids.forEach(id => {
     roles.value.forEach(role => {
-      if (role.id == id) {
-        ret.push(role.name);
+      if (role.id === id) {
+        roleNamesHtml += `<span class="bg-slate-400 rounded text-slate-100 px-2 text-sm mb-2 xl:mb-0">${role.name}</span> `;
       }
     });
   });
-  return ret;
+  return roleNamesHtml.trim(); // 去除最后一个多余的空格
 }
 
 const buttonClickCss = computed(() => {
@@ -501,7 +501,7 @@ const dsize = ref<any>('lg');
                 ></FormSwitch.Input>
               </FormSwitch>
             </Table.Td>
-            <Table.Td>{{ getRoleName(data.roles) }}</Table.Td>
+            <Table.Td v-html="getRoleName(data.roles)"></Table.Td>
           </Table.Tr>
         </Table.Tbody>
       </Table>
