@@ -111,6 +111,36 @@ const login = () => {
     }
   );
 };
+
+const ipAddress = ref('');
+const deviceInfo = ref('');
+
+const getCurrentIp = async () => {
+  try {
+    const response = await fetch('https://api.ipify.org?format=json');
+    const data = await response.json();
+    ipAddress.value = data.ip; // 将获取到的IP地址存储到响应式引用中
+  } catch (error) {
+    console.error('获取IP地址失败:', error);
+    throw error; // 抛出错误供上层处理
+  }
+};
+
+// 获取当前设备的操作系统、浏览器等信息
+const getBrowserInfo = () => {
+  let info = {
+    userAgent: navigator.userAgent, // 获取用户代理字符串，包含浏览器版本和操作系统信息
+    language: navigator.language, // 获取浏览器设置的语言
+    platform: navigator.platform, // 获取操作系统平台
+    screenWidth: window.screen.width, // 获取屏幕宽度
+    screenHeight: window.screen.height, // 获取屏幕高度
+  };
+  deviceInfo.value = JSON.stringify(info);
+};
+
+getBrowserInfo();
+getCurrentIp();
+
 const doLogin = () => {
   if (uLoginMethod == LoginMethod.code && !isSend.value) {
     SetAlertMessages(warningAlerts, [{ index: 0n, message: `登录失败: 请先获取验证码` }]);
@@ -122,6 +152,8 @@ const doLogin = () => {
     formData.phone_number,
     formData.password,
     formData.code,
+    ipAddress.value,
+    deviceInfo.value,
     () => {
       ResetAlertMessages(warningAlerts);
       // 登录成功后，获取用户中心数据并同步到本地
