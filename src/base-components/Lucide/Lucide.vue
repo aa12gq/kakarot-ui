@@ -1,10 +1,8 @@
 <script setup lang="ts">
-import * as icons from "./icons"
-import type { SVGAttributes } from "vue";
-import {defineProps} from "vue"
-import type {Icon} from "./types";
-
-interface LucideProps extends SVGAttributes {
+import * as icons from './icons';
+import type { Icon } from './types';
+import { SVGAttributes } from 'vue';
+interface LucideProps extends /* @vue-ignore */ SVGAttributes {
   icon: Icon;
   title?: string;
 }
