@@ -10,7 +10,7 @@ import { twMerge } from "tailwind-merge";
 import { DialogTitle as HeadlessDialogTitle } from "@headlessui/vue";
 import { useAttrs, computed } from "vue";
 
-interface TitleProps extends ExtractProps<typeof HeadlessDialogTitle> {
+interface TitleProps extends /* @vue-ignore */ ExtractProps<typeof HeadlessDialogTitle> {
   as?: string | object;
 }
 

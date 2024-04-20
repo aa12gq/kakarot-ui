@@ -10,7 +10,7 @@ export interface NotificationElement extends HTMLDivElement {
   hideToast: () => void;
 }
 
-export interface NotificationProps extends HTMLAttributes {
+export interface NotificationProps extends /* @vue-ignore */ HTMLAttributes {
   options?: Options;
   refKey?: string;
 }

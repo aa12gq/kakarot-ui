@@ -17,7 +17,7 @@ import {
 } from "vue";
 import type { ProvideFormInline } from "./FormInline.vue";
 
-export interface FormSelectProps extends SelectHTMLAttributes {
+export interface FormSelectProps extends /* @vue-ignore */ SelectHTMLAttributes {
   modelValue?: SelectHTMLAttributes["value"];
   formSelectSize?: "sm" | "lg";
 }

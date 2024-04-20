@@ -10,7 +10,7 @@ import { twMerge } from "tailwind-merge";
 import { computed, type InputHTMLAttributes, useAttrs, watch, ref } from "vue";
 import FormCheck from "../FormCheck";
 
-interface InputProps extends InputHTMLAttributes {
+interface InputProps extends /* @vue-ignore */ InputHTMLAttributes {
   modelValue?: InputHTMLAttributes["value"];
   type: "checkbox";
 }

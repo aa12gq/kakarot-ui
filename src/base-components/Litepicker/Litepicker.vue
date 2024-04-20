@@ -20,16 +20,18 @@ export interface LitepickerEmit {
   (e: "onConfirm", date1: DateTime, date2: DateTime): void
 }
 export type ProvideLitepicker = (el: LitepickerElement) => void;
-export interface LitepickerProps extends InputHTMLAttributes {
+export interface LitepickerProps extends /* @vue-ignore */ InputHTMLAttributes {
   modelValue: string;
   refKey?: string;
   options?: any;
   initValue?: boolean;
+  positionFollow?: boolean;
 }
 
 const props = withDefaults(defineProps<LitepickerProps>(), {
   options: {},
   initValue: true,
+  positionFollow: false,
 });
 const defaultOptions = {
   buttonText: {"apply":"确定","cancel":"取消"},
@@ -54,12 +56,16 @@ const vLitepickerDirective = {
       setValue(props, emit);
     }
     if (el) {
-      init(el, props, emit);
+      init(el, props, emit, {
+        positionFollow: props.positionFollow
+      });
     }
   },
   updated(el: LitepickerElement) {
     if (tempValue.value !== props.modelValue && el !== null) {
-      reInit(el, props, emit);
+      reInit(el, props, emit, {
+        positionFollow: props.positionFollow
+      });
     }
   },
   unmounted(el: LitepickerElement){
@@ -91,7 +97,7 @@ onMounted(() => {
   <FormInput
     ref="litepickerRef"
     type="text"
-    :value="props.modelValue"
+    :model-value="props.modelValue"
     :disabled="props.disabled"
     @change="(event) => {
       emit('update:modelValue', (event.target as HTMLSelectElement).value);

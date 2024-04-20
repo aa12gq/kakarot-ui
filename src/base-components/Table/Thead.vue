@@ -13,7 +13,7 @@ export type ProvideThead = {
   variant?: "default" | "light" | "dark";
 };
 
-interface TheadProps extends HTMLAttributes {
+interface TheadProps extends /* @vue-ignore */ HTMLAttributes {
   variant?: "default" | "light" | "dark";
 }
 

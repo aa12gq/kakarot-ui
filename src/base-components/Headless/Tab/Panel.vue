@@ -3,7 +3,7 @@ import { TabPanel as HeadlessTabPanel, TransitionRoot } from "@headlessui/vue";
 import type {ExtractPropTypes} from "vue";
 import {onMounted, ref} from "vue";
 
-interface PanelProps extends ExtractPropTypes<typeof HeadlessTabPanel> {}
+interface PanelProps extends /* @vue-ignore */ ExtractPropTypes<typeof HeadlessTabPanel> {}
 
 defineProps<PanelProps>();
 const panel = ref(HeadlessTabPanel);

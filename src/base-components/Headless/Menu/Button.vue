@@ -10,7 +10,7 @@ import { twMerge } from "tailwind-merge";
 import { MenuButton as HeadlessMenuButton } from "@headlessui/vue";
 import { useAttrs, computed } from "vue";
 
-interface ButtonProps extends ExtractProps<typeof HeadlessMenuButton> {
+interface ButtonProps extends /* @vue-ignore */ ExtractProps<typeof HeadlessMenuButton> {
   as?: string | object;
 }
 

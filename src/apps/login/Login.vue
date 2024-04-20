@@ -603,4 +603,3 @@ const SendCode = () => {
     </div>
   </div>
 </template>
-@/stores/grpc/sms/v1/sms

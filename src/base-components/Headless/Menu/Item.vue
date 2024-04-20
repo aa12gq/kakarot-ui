@@ -10,7 +10,7 @@ import { twMerge } from "tailwind-merge";
 import { MenuItem as HeadlessMenuItem } from "@headlessui/vue";
 import { useAttrs, computed } from "vue";
 
-interface ItemProps extends ExtractProps<typeof HeadlessMenuItem> {
+interface ItemProps extends /* @vue-ignore */ ExtractProps<typeof HeadlessMenuItem> {
   as?: string | object;
 }
 

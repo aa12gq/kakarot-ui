@@ -16,7 +16,7 @@ export type ProvideList = {
   variant?: Variant;
 };
 
-interface ListProps extends ExtractProps<typeof HeadlessTabList> {
+interface ListProps extends /* @vue-ignore */ ExtractProps<typeof HeadlessTabList> {
   variant?: Variant;
 }
 

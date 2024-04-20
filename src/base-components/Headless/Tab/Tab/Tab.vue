@@ -4,7 +4,7 @@ import { Tab as HeadlessTab } from "@headlessui/vue";
 import Provider from "./Provider.vue";
 import type { ProvideList } from "../List.vue";
 
-interface TabProps extends ExtractProps<typeof HeadlessTab> {
+interface TabProps extends /* @vue-ignore */ ExtractProps<typeof HeadlessTab> {
   fullWidth?: boolean;
 }
 

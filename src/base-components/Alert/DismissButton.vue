@@ -9,7 +9,7 @@ import _ from "lodash";
 import { twMerge } from "tailwind-merge";
 import { withDefaults, computed, type ButtonHTMLAttributes, useAttrs } from "vue";
 
-interface DismissButtonProps extends ButtonHTMLAttributes {
+interface DismissButtonProps extends /* @vue-ignore */ ButtonHTMLAttributes {
   as?: string | object;
 }
 

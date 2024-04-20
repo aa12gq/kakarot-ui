@@ -4,7 +4,7 @@ import { withDefaults, computed, inject } from "vue";
 import type { LiHTMLAttributes } from "vue";
 import type { ProvideBeradcrumb }  from "./Breadcrumb.vue";
 
-interface LinkProps extends LiHTMLAttributes {
+interface LinkProps extends /* @vue-ignore */ LiHTMLAttributes {
   to?: RouterLinkProps["to"];
   active?: boolean;
   index?: number;

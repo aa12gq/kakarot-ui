@@ -7,7 +7,7 @@ import type {Variant} from "@/base-components/Alert/Types";
 
 const show = ref<boolean>(true);
 
-interface AlertProps extends HTMLAttributes {
+interface AlertProps extends  /* @vue-ignore */ HTMLAttributes {
   as?: string | object;
   dismissible?: boolean;
   variant?: Variant;

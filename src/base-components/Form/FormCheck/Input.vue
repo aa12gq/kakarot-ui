@@ -9,7 +9,7 @@ import _ from "lodash";
 import { twMerge } from "tailwind-merge";
 import { computed, type InputHTMLAttributes, useAttrs, ref, watch } from "vue";
 
-interface InputProps extends InputHTMLAttributes {
+interface InputProps extends /* @vue-ignore */ InputHTMLAttributes {
   modelValue?: InputHTMLAttributes["value"];
   type: "radio" | "checkbox";
 }

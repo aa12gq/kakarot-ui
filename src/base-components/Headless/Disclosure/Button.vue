@@ -12,7 +12,7 @@ import { useAttrs, computed, inject, watch } from "vue";
 import type { ProvideDisclosure } from "./Disclosure/Provider.vue";
 import type { ProvideGroup } from "./Group.vue";
 
-interface ButtonProps extends ExtractProps<typeof HeadlessDisclosureButton> {
+interface ButtonProps extends /* @vue-ignore */ ExtractProps<typeof HeadlessDisclosureButton> {
   as?: string | object;
 }
 

@@ -1,6 +1,5 @@
 <script setup lang="ts">
-// import { computed } from "@vue/reactivity";
-import {defineProps, computed, provide, type ComputedRef } from "vue";
+import { computed, provide, type ComputedRef } from 'vue';
 
 export type ProvideTab = {
   selected: ComputedRef<boolean>;
@@ -14,10 +13,9 @@ const props = withDefaults(defineProps<ProviderProps>(), {
   selected: false,
 });
 
-provide<ProvideTab>("tab", {
+provide<ProvideTab>('tab', {
   selected: computed(() => props.selected),
 });
-
 </script>
 
 <template>

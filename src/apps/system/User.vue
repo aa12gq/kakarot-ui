@@ -97,7 +97,14 @@ ReListTableUser();
 
 const validator = yup.object({
   username: yup.string().label('系统账号').trim().required(),
-  password: yup.string().label('登录密码').trim().min(6).required(),
+  password: yup
+    .string()
+    .label('登录密码')
+    .trim()
+    .when({
+      is: () => controlType.value == 1,
+      then: s => s.required(),
+    }),
   fullName: yup.string().label('用户昵称').trim().required(),
 });
 const errors = yup.toSchemaErrors(validator, []);
@@ -532,13 +539,12 @@ const setFormModalPreview = (value: boolean, isAdd?: boolean) => {
             <FormLabel htmlFor="horizontal-form-1" class="w-1/4 required-label">用户昵称</FormLabel>
             <div class="w-3/4 relative">
               <FormInput id="2" class="" type="text" v-model="formData.fullName" placeholder="请输入昵称" />
-            <template v-if="errors.fullName.errors">
-              <div v-for="(error, index) in errors.fullName.errors" :key="index" class="absolute text-danger">
-                {{ error.message }}
-              </div>
-            </template>
+              <template v-if="errors.fullName.errors">
+                <div v-for="(error, index) in errors.fullName.errors" :key="index" class="absolute text-danger">
+                  {{ error.message }}
+                </div>
+              </template>
             </div>
-            
           </FormInline>
           <FormInline class="flex items-center">
             <FormLabel htmlFor="horizontal-form-1" class="w-1/4 required-label">电子邮箱</FormLabel>
@@ -560,13 +566,12 @@ const setFormModalPreview = (value: boolean, isAdd?: boolean) => {
             <FormLabel htmlFor="horizontal-form-1" class="w-1/4 required-label">密码</FormLabel>
             <div class="w-3/4 relative">
               <FormInput id="7" :type="controlType == 1 ? 'password' : 'text'" v-model="formData.password" placeholder="设置登录密码" />
-            <template v-if="errors.password.errors">
-              <div v-for="(error, index) in errors.password.errors" :key="index" class="absolte text-danger">
-                {{ error.message }}
-              </div>
-            </template>
+              <template v-if="errors.password.errors">
+                <div v-for="(error, index) in errors.password.errors" :key="index" class="absolte text-danger">
+                  {{ error.message }}
+                </div>
+              </template>
             </div>
-            
           </FormInline>
         </div>
       </Dialog.Description>

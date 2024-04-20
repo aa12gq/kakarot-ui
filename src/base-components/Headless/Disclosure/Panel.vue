@@ -13,7 +13,7 @@ import {
 } from "@headlessui/vue";
 import { useAttrs, computed } from "vue";
 
-interface PanelProps extends ExtractProps<typeof HeadlessDisclosurePanel> {
+interface PanelProps extends /* @vue-ignore */ ExtractProps<typeof HeadlessDisclosurePanel> {
   as?: string | object;
 }
 

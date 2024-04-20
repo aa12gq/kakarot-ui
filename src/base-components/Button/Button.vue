@@ -40,7 +40,7 @@ type Elevated = boolean;
 type Size = "sm" | "lg";
 type Rounded = boolean;
 
-interface ButtonProps extends ButtonHTMLAttributes {
+interface ButtonProps extends /* @vue-ignore */ ButtonHTMLAttributes {
   as?: string | object;
   variant?: Variant;
   elevated?: Elevated;

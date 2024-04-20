@@ -17,7 +17,7 @@ import {
 import type { ProvideTab } from "./Tab/Provider.vue";
 import type { ProvideList } from "./List.vue";
 
-interface ButtonProps extends ButtonHTMLAttributes {
+interface ButtonProps extends /* @vue-ignore */ ButtonHTMLAttributes {
   as?: string | object;
 }
 

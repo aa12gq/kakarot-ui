@@ -14,7 +14,7 @@ import {twMerge} from "tailwind-merge";
 import type {ProvideSlideover} from "./Slideover.vue";
 import {inject, useAttrs, computed} from "vue";
 
-interface PanelProps extends ExtractProps<typeof HeadlessDialogPanel> {
+interface PanelProps extends /* @vue-ignore */ ExtractProps<typeof HeadlessDialogPanel> {
   as?: string | object;
   unmount?: boolean;
 }

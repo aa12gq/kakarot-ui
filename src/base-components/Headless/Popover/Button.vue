@@ -10,7 +10,7 @@ import { twMerge } from "tailwind-merge";
 import { PopoverButton as HeadlessPopoverButton } from "@headlessui/vue";
 import { useAttrs, computed } from "vue";
 
-interface ButtonProps extends ExtractProps<typeof HeadlessPopoverButton> {
+interface ButtonProps extends /* @vue-ignore */ ExtractProps<typeof HeadlessPopoverButton> {
   as?: string | object;
 }
 

@@ -1,13 +1,14 @@
 <script setup lang="ts">
-import { ComputedRef, computed, provide } from "vue";
+import { provide, computed } from 'vue';
+import type { ComputedRef } from 'vue';
 
 export type ProvideDisclosure = ComputedRef<{
   open: boolean;
-  close: () => void;
+  close: (ref?: HTMLElement | undefined) => void;
   index: number;
 }>;
 
-interface ProviderProps {
+export interface ProviderProps {
   open: boolean;
   close: (ref?: HTMLElement) => void;
   index: number;
@@ -20,7 +21,7 @@ const props = withDefaults(defineProps<ProviderProps>(), {
 });
 
 provide<ProvideDisclosure>(
-  "disclosure",
+  'disclosure',
   computed(() => {
     return {
       open: props.open,

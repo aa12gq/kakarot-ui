@@ -19,7 +19,7 @@ import {twMerge} from "tailwind-merge";
 import {Dialog as HeadlessDialog, TransitionRoot} from "@headlessui/vue";
 import {provide, useAttrs, computed, ref} from "vue";
 
-interface SlideoverProps extends ExtractProps<typeof HeadlessDialog> {
+interface SlideoverProps extends /* @vue-ignore */ ExtractProps<typeof HeadlessDialog> {
   size?: Size;
   open: boolean;
   staticBackdrop?: boolean;

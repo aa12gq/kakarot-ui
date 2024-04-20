@@ -13,7 +13,7 @@ import {
 } from "@headlessui/vue";
 import { useAttrs, computed } from "vue";
 
-interface PanelProps extends ExtractProps<typeof HeadlessPopoverPanel> {
+interface PanelProps extends /* @vue-ignore */ ExtractProps<typeof HeadlessPopoverPanel> {
   as?: string | object;
   placement?:
     | "top-start"

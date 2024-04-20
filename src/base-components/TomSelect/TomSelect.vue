@@ -16,8 +16,8 @@ export interface TomSelectElement extends HTMLSelectElement {
   TomSelect: TomSelectPlugin;
 }
 
-export interface TomSelectProps extends SelectHTMLAttributes {
-  modelValue: optionValue;
+export interface TomSelectProps extends /* @vue-ignore */ SelectHTMLAttributes {
+  modelValue?: optionValue;
   options?: RecursivePartial<TomSettings>;
   refKey?: string;
 }
@@ -104,7 +104,7 @@ const vSelectDirective = {
       return;
     }
     const value = props.modelValue;
-    updateValue(el, clonedEl, value, props, computedOptions.value, emit);
+    updateValue(el, clonedEl, value!, props, computedOptions.value, emit);
   },
 };
 

@@ -6,7 +6,7 @@ export type ProvideBeradcrumb = {
   light?: boolean;
 };
 
-interface BreadcrumbProps extends HTMLAttributes {
+interface BreadcrumbProps extends  /* @vue-ignore */ HTMLAttributes {
   light?: boolean;
 }
 

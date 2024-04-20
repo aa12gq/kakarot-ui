@@ -18,7 +18,7 @@ import {
 import type { ProvideFormInline } from "./FormInline.vue";
 import type { ProvideInputGroup } from "./InputGroup/InputGroup.vue";
 
-export interface FormInputProps extends InputHTMLAttributes {
+export interface FormInputProps extends /* @vue-ignore */ InputHTMLAttributes {
   modelValue?: InputHTMLAttributes["value"];
   formInputSize?: "sm" | "lg";
   rounded?: boolean;

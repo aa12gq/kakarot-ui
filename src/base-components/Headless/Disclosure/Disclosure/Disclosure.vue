@@ -12,7 +12,7 @@ import { useAttrs, computed, inject } from "vue";
 import type { ProvideGroup } from "../Group.vue";
 import Provider from "./Provider.vue";
 
-interface DisclosureProps extends ExtractProps<typeof HeadlessDisclosure> {
+interface DisclosureProps extends /* @vue-ignore */ ExtractProps<typeof HeadlessDisclosure> {
   index?: number;
 }
 

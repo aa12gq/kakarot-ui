@@ -22,7 +22,7 @@ export type ProvideTable = {
   sm: boolean;
 };
 
-interface TableProps extends TableHTMLAttributes {
+interface TableProps extends /* @vue-ignore */ TableHTMLAttributes {
   dark?: boolean;
   bordered?: boolean;
   hover?: boolean;

@@ -13,7 +13,7 @@ import {
 } from "@headlessui/vue";
 import { useAttrs, computed } from "vue";
 
-interface ItemsProps extends ExtractProps<typeof HeadlessMenuItems> {
+interface ItemsProps extends /* @vue-ignore */ ExtractProps<typeof HeadlessMenuItems> {
   as?: string | object;
   placement?:
     | "top-start"

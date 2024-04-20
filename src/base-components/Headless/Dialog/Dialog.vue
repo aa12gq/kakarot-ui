@@ -18,7 +18,7 @@ export type ProvideDialog = {
   size?: Size;
 };
 
-interface DialogProps extends ExtractProps<typeof HeadlessDialog> {
+interface DialogProps extends /* @vue-ignore */ ExtractProps<typeof HeadlessDialog> {
   size?: Size;
   open: boolean;
   staticBackdrop?: boolean;

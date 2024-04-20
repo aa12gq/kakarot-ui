@@ -11,7 +11,7 @@ import { DialogDescription as HeadlessDialogDescription } from "@headlessui/vue"
 import { useAttrs, computed } from "vue";
 
 interface DescriptionProps
-  extends ExtractProps<typeof HeadlessDialogDescription> {
+  extends /* @vue-ignore */ ExtractProps<typeof HeadlessDialogDescription> {
   as?: string | object;
 }
 
