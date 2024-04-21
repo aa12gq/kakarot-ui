@@ -291,7 +291,7 @@ function SaveRole() {
 function getRoleName(ids: bigint[]): string {
   let roleNamesHtml: string = '';
   ids.forEach(id => {
-    roles.value.forEach(role => {
+    roles.value.forEach((role: { id: bigint; name: any }) => {
       if (role.id === id) {
         roleNamesHtml += `<span class="bg-slate-400 rounded text-slate-100 px-2 text-sm mb-2 xl:mb-0">${role.name}</span> `;
       }
@@ -336,6 +336,34 @@ const setFormModalPreview = (value: boolean, isAdd?: boolean) => {
   }
   formModelPreview.value = value;
 };
+
+// 删除系统用户
+const deleteModalPreview = ref(false);
+const setDeleteModalPreview = (value: boolean) => {
+  if (ids.value.length == 0) {
+    SetAlertMessages(warningAlerts, [{ index: 0n, message: '请选择要删除的用户' }]);
+    return;
+  }
+  deleteModalPreview.value = value;
+};
+
+const deleteUser = () => {
+  if (ids.value.length == 0) {
+    SetAlertMessages(warningAlerts, [{ index: 0n, message: '请选择要删除的用户' }]);
+    return;
+  }
+  sys.DeleteUser(
+    ids.value[0].id,
+    (d: BaseReply) => {
+      SetAlertMessages(infoAlerts, [{ index: 0n, message: '删除成功' }]);
+      ReListTableUser();
+    },
+    (why: any) => {
+      SetAlertMessages(warningAlerts, [{ index: 0n, message: why.code + ': ' + why.message }]);
+    }
+  );
+  setDeleteModalPreview(false);
+};
 </script>
 
 <template>
@@ -343,7 +371,7 @@ const setFormModalPreview = (value: boolean, isAdd?: boolean) => {
     <h2 class="mt-2 text-lg font-medium">系统用户管理</h2>
     <Alerts variant="primary" icon="AlertCircle" :with-close-icon="true" :auto-dismiss="6000" :messages="infoAlerts" class="flex mx-4 mt-3 items-center mb-0" />
     <Alerts variant="warning" icon="AlertTriangle" :with-close-icon="true" :messages="warningAlerts" class="flex mx-4 mt-3 items-center mb-0" />
-    <div class="mt-3 box">
+    <div class="mt-3 box p-2">
       <div class="pt-2">
         <FormLabel htmlFor="test1" class="inline w-60 mr-2 ml-2">用户类型</FormLabel>
         <FormSelect id="test1" class="inline w-40" v-model="data1">
@@ -369,13 +397,17 @@ const setFormModalPreview = (value: boolean, isAdd?: boolean) => {
             <Lucide icon="PlusSquare" class="w-4 h-4 mr-1" />
             添加
           </Button>
-          <Button variant="secondary" class="w-24 mb-2 mr-3 py-1" @click="setFormModalPreview(true, false)" :disabled="ids.length != 1">
+          <Button variant="warning" class="w-24 mb-2 mr-3 py-1" @click="setFormModalPreview(true, false)" :disabled="ids.length != 1">
             <Lucide icon="Edit" class="w-4 h-4 mr-1" />
             修改
           </Button>
           <Button variant="primary" class="w-24 mb-2 mr-3 py-1 min-w-fit" @click="setroleModalPreview(true)" :disabled="ids.length != 1">
             <div class="h-4"></div>
             设置角色
+          </Button>
+          <Button variant="danger" class="w-24 mb-2 mr-3 py-1 min-w-fit" @click="setDeleteModalPreview(true)" :disabled="ids.length != 1">
+            <div class="h-4"></div>
+            删除
           </Button>
         </div>
       </div>
@@ -601,6 +633,38 @@ const setFormModalPreview = (value: boolean, isAdd?: boolean) => {
           取消
         </Button>
       </Dialog.Footer>
+    </Dialog.Panel>
+  </Dialog>
+
+  <Dialog
+    :open="deleteModalPreview"
+    @close="
+      () => {
+        setDeleteModalPreview(false);
+      }
+    "
+  >
+    <Dialog.Panel>
+      <div class="p-5 text-center">
+        <Lucide icon="AlertCircle" class="w-16 h-16 mx-auto mt-3 text-danger" />
+        <div class="mt-5 text-2xl">确定删除?</div>
+        <div class="mt-2 text-slate-500">此操作不可恢复!</div>
+      </div>
+      <div class="px-5 pb-8 text-center">
+        <Button
+          variant="outline-secondary"
+          type="button"
+          @click="
+            () => {
+              setDeleteModalPreview(false);
+            }
+          "
+          class="w-24 mr-1"
+        >
+          取消
+        </Button>
+        <Button variant="danger" type="button" class="w-24" @click="deleteUser()">确定</Button>
+      </div>
     </Dialog.Panel>
   </Dialog>
 </template>

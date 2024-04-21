@@ -108,6 +108,13 @@ service System {
             body: "*"
         };
     }
+
+    // 获取系统用户登录日志列表
+    rpc ListSystemUserLoginLog(LoginLogListRequest) returns (LoginLogListReply) {
+        option (google.api.http) = {
+            get: "/v1/system/user/login_log"
+        };
+    }
 }
 
 message User {
@@ -222,4 +229,26 @@ message ResetUserPasswordRequest {
 }
 
 message ResetUserPasswordReply {
+}
+
+message SystemUserLoginLog {
+    uint64 id = 1;
+    uint64 user_id = 2;
+    string user_name = 3;
+    string full_name = 4;
+    string ip = 5;
+    string device = 6;
+    google.protobuf.Timestamp login_at = 7;
+}
+
+message LoginLogListRequest {
+    int32 page = 1;
+    int32 page_size = 2;
+    string user_name = 4;
+    string full_name = 5;
+}
+
+message LoginLogListReply {
+    repeated SystemUserLoginLog data = 1;
+    int32 total = 2;
 }

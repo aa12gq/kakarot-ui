@@ -9,6 +9,7 @@ import _404 from '@/apps/_404.vue';
 
 import SystemUser from '@/apps/system/User.vue';
 import SystemRole from '@/apps/system/Role.vue';
+import SystemLoginLog from '@/apps/system/LoginLog.vue';
 
 import UcProfileView from '@/apps/uc/Profile.vue';
 import UcPasswordView from '@/apps/uc/Password.vue';
@@ -82,6 +83,11 @@ const router = createRouter({
           name: 'system-role',
           component: SystemRole,
           path: '/system/role',
+        },
+        {
+          name: 'system-login-log',
+          component: SystemLoginLog,
+          path: '/system/login-log',
         },
       ],
     },

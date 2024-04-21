@@ -33,6 +33,7 @@ export const BasicUserInfo = (success?: (userInfo: BasicUserInfoReply) => void, 
     .basicUserInfo(UpdatePasswordRequest.create())
     .response.then(re => {
       if (success) {
+        console.log(re);
         success(re);
       }
     }, fail);

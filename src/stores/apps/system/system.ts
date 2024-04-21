@@ -15,6 +15,8 @@ import {
   UserReply,
   UserListReply,
   ResetUserPasswordRequest,
+  LoginLogListRequest,
+  LoginLogListReply
 } from '@/stores/grpc/system/v1/system';
 import codes from '@/utils/errocodes';
 export { Role };
@@ -105,10 +107,17 @@ export const ResetUserPassword = (phone: string, code: string, success?: () => v
     .then(success, fail);
 };
 
+const ListSystemUserLoginLog = (req:LoginLogListRequest  , success: (value: any) => void, fail?: (why: any) => void) : Promise<void> =>{
+  let c = GetClient(SystemClient).listSystemUserLoginLog(req);
+  return c.response.then(re => {
+    success(re);
+  }, fail);
+}
+
 export interface userListReq {
   page: number;
   pageSize: number;
   username: string;
 }
 
-export { AddRoleToUser, AddRole, UpdateRole, DeleteRole, QueryRoleList, AddUser, UpdateUser, QueryUser, DeleteUser, QueryUserList };
+export { AddRoleToUser, AddRole, UpdateRole, DeleteRole, QueryRoleList, AddUser, UpdateUser, QueryUser, DeleteUser, QueryUserList, ListSystemUserLoginLog };

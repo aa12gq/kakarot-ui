@@ -73,6 +73,12 @@ export const menuSlots: SideMenuState = {
           id: 11010,
         },
         {
+          icon: 'Role1',
+          title: '登录日志',
+          pageName: 'system-login-log',
+          id: 11040,
+        },
+        {
           icon: 'Flow',
           title: '流程管理',
           id: 11020,
