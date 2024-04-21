@@ -112,19 +112,7 @@ const login = () => {
   );
 };
 
-const ipAddress = ref('');
 const deviceInfo = ref('');
-
-const getCurrentIp = async () => {
-  try {
-    const response = await fetch('https://api.ipify.org?format=json');
-    const data = await response.json();
-    ipAddress.value = data.ip; // 将获取到的IP地址存储到响应式引用中
-  } catch (error) {
-    console.error('获取IP地址失败:', error);
-    throw error; // 抛出错误供上层处理
-  }
-};
 
 // 获取当前设备的操作系统、浏览器等信息
 const getBrowserInfo = () => {
@@ -139,7 +127,6 @@ const getBrowserInfo = () => {
 };
 
 getBrowserInfo();
-getCurrentIp();
 
 const doLogin = () => {
   if (uLoginMethod == LoginMethod.code && !isSend.value) {
@@ -152,7 +139,6 @@ const doLogin = () => {
     formData.phone_number,
     formData.password,
     formData.code,
-    ipAddress.value,
     deviceInfo.value,
     () => {
       ResetAlertMessages(warningAlerts);

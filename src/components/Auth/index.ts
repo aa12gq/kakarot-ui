@@ -39,7 +39,7 @@ export const AutoRenewJWT = (interval?: number) => {
   }, 2000);
 };
 
-const authenticate = (loginType: LoginMethod, userName: string, phoneNum: string, password: string, code: string, ip: string, device: string): Promise<AccountInfo> => {
+const authenticate = (loginType: LoginMethod, userName: string, phoneNum: string, password: string, code: string, device: string): Promise<AccountInfo> => {
   return new Promise((success, fail) => {
     GetClient(AuthClient)
       .login(
@@ -49,7 +49,6 @@ const authenticate = (loginType: LoginMethod, userName: string, phoneNum: string
           username: userName,
           password: password,
           code: code,
-          ip: ip,
           device: device,
         })
       )
@@ -82,12 +81,11 @@ export const Login = (
   phoneNum: string,
   password: string,
   code: string,
-  ip: string,
   device: string,
   success?: (userinfo: AccountInfo) => void,
   fail?: (reason?: any) => void
 ) => {
-  authenticate(loginType, userName, phoneNum, password, code, ip, device)
+  authenticate(loginType, userName, phoneNum, password, code, device)
     .then(info => {
       authStore().setAccount({ JWT: info.JWT, UID: info.UID, Username: info.Username });
       authStore().activate();

@@ -22,21 +22,21 @@ option (.grpc.gateway.protoc_gen_openapiv2.options.openapiv2_swagger) = {
   consumes: "application/json";
   produces: "application/json";
 };
+
 enum LoginMethod {
   account = 0;
   tel = 1;
   code = 2;
 }
+
 message LoginRequest {
   LoginMethod method = 1;
   string username = 2;
   string phone_num = 3;
   string password = 4;
   string  code = 5;
-  // 登录ip
-  string ip = 6;
   // 设备信息
-  string device = 7;
+  string device = 6;
 }
 message LoginReply {
   uint64 uid = 1;

@@ -27,7 +27,11 @@ const loginLogList = ref<LoginLogListReply>(LoginLogListReply.create());
 
 const RefreshLoginLogList = () => {
   ListSystemUserLoginLog(LoginLogListRequest.create({ page: pagingRef.value?.page, pageSize: pagingRef.value?.pageSize, userName: '', fullName: username.value }), (res: LoginLogListReply) => {
+    loginLogList.value = LoginLogListReply.create()
+    setTimeout(() => {
     loginLogList.value = res;
+      
+    }, 100);
   }),
     (why: any) => {
       SetAlertMessages(warningAlerts, [{ index: 0n, message: why.code + ': ' + why.message }]);
