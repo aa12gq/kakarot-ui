@@ -1,7 +1,7 @@
 <script setup lang="ts">
 import Lucide from '@/base-components/Lucide';
 import { Alerts, type AlertMessage, SetAlertMessages } from '@/base-components/Alert';
-import { SystemUserLoginLog, LoginLogListRequest, LoginLogListReply } from '@/stores/grpc/system/v1/system';
+import {LoginLogListRequest, LoginLogListReply } from '@/stores/grpc/system/v1/system';
 import { ListSystemUserLoginLog } from '@/stores/apps/system/system';
 import Table from '@/base-components/Table';
 import { getDateTimeTs } from '@/utils/date';
