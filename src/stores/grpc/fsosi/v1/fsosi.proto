@@ -1,0 +1,120 @@
+syntax = "proto3";
+
+package com.kakarot.fsosi.grpc.v1;
+
+import "protoc-gen-openapiv2/options/annotations.proto";
+import "google/api/annotations.proto";
+import "google/protobuf/timestamp.proto";
+
+option go_package = "go-kakarot/proto/proto/fsosi/v1;v1";
+
+option (.grpc.gateway.protoc_gen_openapiv2.options.openapiv2_swagger) = {
+	info: {
+		title: "文件(对象)存储服务集成平台";
+		version: "1.0.0";
+		description: "文件(对象)存储服务集成平台, 提供统一文件存储服务和接口。";
+		contact: {
+			name: "aa12gq";
+			url: "https://github.com/aa12gq/";
+		};
+	};
+	schemes: [HTTP, HTTPS];
+	consumes: "application/json";
+	produces: "application/json";
+};
+
+service Fsosi {
+	// 创建文件对象记录(创建fso请使用http服务，此接口目前无效).
+	rpc CreateFso (CreateFsoRequest) returns (CreateFsoReply){
+		option (google.api.http) = {
+			put: "/fsosi/v1/createfso",
+			body: "*"
+		};
+	};
+	rpc UpdateFso (UpdateFsoRequest) returns (UpdateFsoReply);
+	// 根据fsoid删除fso对象
+	rpc DeleteFso (DeleteFsoRequest) returns (DeleteFsoReply){
+		option (google.api.http) = {
+			delete: "/fsosi/v1/fso/{fso_id}",
+		};
+	};
+	// 根据文件路径删除fso对象
+	rpc DeleteFsoByPath (DeleteFsoByPathRequest) returns (DeleteFsoByPathReply){
+		option (google.api.http) = {
+			delete: "/fsosi/v1/{path}",
+		};
+	};
+	rpc GetFso (GetFsoRequest) returns (GetFsoReply);
+	rpc ListFso (ListFsoRequest) returns (ListFsoReply);
+}
+
+message FsoInfo {
+	// 唯一ID标识. 调用create时请设置为空.
+	string fso_id = 1;
+	// 文件大小 
+	uint64 size = 2;
+	// 文件名称
+	string filename = 3;
+	// 桶名(相当于根目录).
+	string bucket = 4;
+	// 文件目录.
+	string dir = 5;
+	// 文件路径. 调用create时请设置为空.
+	string path = 6;
+	// 其它自定义信息
+	map<string, string> meta = 7;
+	// 创建时间.调用create时请设置为空.
+	google.protobuf.Timestamp created_at = 8;
+	// 更新时间.调用create时请设置为空.
+	google.protobuf.Timestamp updated_at = 9;
+}
+
+message CreateFsoRequest {
+	FsoInfo fso = 1;
+}
+message CreateFsoReply {
+	FsoInfo fso = 1;
+}
+
+message UpdateFsoRequest {}
+message UpdateFsoReply {}
+
+message DeleteFsoRequest {
+	string fso_id = 1;
+}
+message DeleteFsoReply {}
+
+message GetFsoRequest {
+	string fso_id = 1;
+}
+message GetFsoReply {
+	FsoInfo fso = 1;
+}
+message DeleteFsoByPathRequest {
+	string path = 1;
+}
+message DeleteFsoByPathReply {}
+message ListFsoRequest {
+	// 桶名
+	string bucket = 1;
+	// 文件名称
+	string filename = 2;
+	// 目录
+	string dir = 8;
+	// 创建时间
+	google.protobuf.Timestamp created_start = 4;
+	google.protobuf.Timestamp created_end = 5;
+	// 分页页码
+	uint32 page = 6;
+	// 每页数量
+	uint32 count = 7;
+}
+message ListFsoReply {
+	repeated FsoInfo items = 1;
+	// 总数量
+	uint64 total = 2;
+	// 当前返回数量
+	uint32 count = 3;
+	// 当前页
+	uint32 page = 4;
+}

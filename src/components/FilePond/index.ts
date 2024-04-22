@@ -1,0 +1,1 @@
+export {default as FilePond, get_file_pond} from "./FilePond.vue"

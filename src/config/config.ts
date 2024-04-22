@@ -4,8 +4,8 @@ export const config: Config = {
   // 是否允许未登录使用(默认false).
   allowNoAuth: false,
   fs: {
-    uploadApi: "http://127.0.0.1:3030/v1/upload",
-    cdnBase: "http://127.0.0.1:3030",
+    uploadApi: "http://111.229.160.10:3030/v1/upload",
+    cdnBase: "http://111.229.160.10:3030",
     // downloadApi: "/",
     deleteApi: "/v1/delete",
   },
