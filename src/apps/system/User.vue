@@ -521,8 +521,8 @@ const deleteUser = () => {
                   }
                 "
               >
-                <span v-if="data.status != 0" class="switch-label !text-[0.6rem] whitespace-no-wrap font-bold dark:text-gray-500 ml-5 z-10 !text-gray-500 cursor-pointer"></span>
-                <span v-else class="switch-label !text-[0.6rem] whitespace-no-wrap font-bold dark:text-gray-200 !text-gray-200 z-10 cursor-pointer"></span>
+                <span v-if="data.status != 0" class="switch-label !text-[0.6rem] whitespace-no-wrap font-bold dark:text-gray-500 ml-5 z-10 !text-gray-500 cursor-pointer">禁用</span>
+                <span v-else class="switch-label !text-[0.6rem] whitespace-no-wrap font-bold dark:text-gray-200 !text-gray-200 z-10 cursor-pointer">启用</span>
                 <FormSwitch.Input
                   type="checkbox"
                   :checked="!(data.status as any)"
@@ -674,5 +674,38 @@ const deleteUser = () => {
   content: '*';
   color: red;
   margin-left: 4px;
+}
+
+.table-td {
+  @apply flex items-center mr-3 text-[#4E5969] text-[14px] min-w-fit h-[30px] dark:text-[#bfcdd9];
+}
+
+.table-th {
+  @apply text-[14px] h-[22px];
+}
+
+/* 定义余数为 0 的行颜色 */
+.tr-color-0 {
+  @apply bg-[#f1f5f9];
+}
+
+/* 定义余数为 1 的行颜色 */
+.tr-color-1 {
+  /* background: #f7f9fb !important; */
+  @apply bg-slate-100;
+}
+
+.switch-label {
+  position: absolute;
+  left: 4px;
+  top: 50%;
+  transform: translateY(-50%);
+  color: #333;
+}
+.FormSwitch_Input {
+  position: absolute;
+  right: 4px;
+  top: 50%;
+  transform: translateY(-50%);
 }
 </style>
