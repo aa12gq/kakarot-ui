@@ -21,21 +21,17 @@ import { useDarkModeStore } from '@/stores/dark-mode';
 import { ShowCaptcha, SendUsingPhone, GetToken } from '@/stores/apps/sms/sms';
 import logo from '@/assets/svg/LogoLight.vue';
 import * as pb from '@/stores/grpc/sms/v1/sms';
+import { userLoginAccountInfo, setLoginInfoInput } from '@/stores/login-user-account-info';
+import { message } from '@/utils/message';
 
 const successModalOpen = ref(false);
 const warningAlerts = ref<AlertMessage[]>([]);
 const router = useRouter();
 const loginRedirectCountDown = ref(3);
 const rememberAccount = ref(false);
-const autoComplete = computed((): 'off' | 'on' => {
-  return rememberAccount.value ? 'on' : 'off';
-});
 const submitBtnType = computed((): 'submit' | 'button' => {
   return rememberAccount.value ? 'submit' : 'button';
 });
-const toggleRememberAccount = (e: Event) => {
-  rememberAccount.value = (e.target as HTMLInputElement).checked;
-};
 
 let uLoginMethod = LoginMethod.account;
 const formData = reactive({
@@ -127,10 +123,10 @@ const getBrowserInfo = () => {
 };
 
 getBrowserInfo();
-
+const LoginAccountInfo = userLoginAccountInfo();
 const doLogin = () => {
   if (uLoginMethod == LoginMethod.code && !isSend.value) {
-    SetAlertMessages(warningAlerts, [{ index: 0n, message: `登录失败: 请先获取验证码` }]);
+    message.Error(`登录失败: 请先获取验证码`);
     return;
   }
   Login(
@@ -154,7 +150,7 @@ const doLogin = () => {
         )
         .finally(() => {
           // 选择不记住账号时,修改password控件属性，避免浏览器询问记住密码.
-          if (!rememberAccount.value && uLoginMethod !== LoginMethod.code) {
+          if (uLoginMethod !== LoginMethod.code) {
             // 当前的方式, safari始终无法询问是否记住密码.
             let pf = document.getElementById('field-password') as HTMLInputElement;
             let pf2 = document.getElementById('field-password2') as HTMLInputElement;
@@ -162,6 +158,32 @@ const doLogin = () => {
             pf.type = pf2.type = 'text';
             pf.disabled = pf2.disabled = true;
           }
+          if (rememberAccount.value) {
+            const loginInfoInput: setLoginInfoInput = {
+              loginType: 'username',
+              account: '',
+            };
+            switch (uLoginMethod) {
+              case LoginMethod.account:
+                loginInfoInput.loginType = 'username';
+                loginInfoInput.account = formData.username;
+                loginInfoInput.password = formData.password;
+                break;
+              case LoginMethod.tel:
+                loginInfoInput.loginType = 'phone';
+                loginInfoInput.account = formData.phone_number;
+                loginInfoInput.password = formData.password;
+                break;
+              case LoginMethod.code:
+                loginInfoInput.loginType = 'code';
+                loginInfoInput.account = formData.phone_number;
+                break;
+            }
+            LoginAccountInfo.setLoginInfo(loginInfoInput);
+          } else {
+            LoginAccountInfo.clearLoginInfo();
+          }
+
           successModalOpen.value = true;
           // 倒计时跳转
           let cd = setInterval(() => {
@@ -176,7 +198,7 @@ const doLogin = () => {
         });
     },
     why => {
-      SetAlertMessages(warningAlerts, [{ index: 0n, message: `登录失败: ${why.code} ${why.message}` }]);
+      message.Error(`登录失败: ${why.code} ${why.message}`);
     }
   );
 };
@@ -188,6 +210,26 @@ const setBGColor = () => {
     bgColor.value = getColor('primary');
   }
 };
+function rememberLoginInfo() {
+  const info = LoginAccountInfo.loginInfo;
+  rememberAccount.value = info !== undefined;
+  if (info) {
+    switch (info.loginType) {
+      case 'username':
+        formData.username = info.account ?? '';
+        formData.password = info.password ?? '';
+        break;
+      case 'phone':
+        formData.phone_number = info.account ?? '';
+        formData.password = info.password ?? '';
+        break;
+      case 'code':
+        formData.phone_number = info.account ?? '';
+        break;
+    }
+  }
+}
+
 onMounted(() => {
   setBGColor();
   watch(useColorSchemeStore(), () => {
@@ -196,6 +238,7 @@ onMounted(() => {
   watch(useDarkModeStore(), () => {
     setBGColor();
   });
+  rememberLoginInfo();
 });
 const isVerifyCodeLogin = ref(false);
 const changeVerifyCodeLogin = () => {
@@ -221,12 +264,7 @@ const RefreshCaptcha = () => {
       captchaUrl.value = d;
     },
     why => {
-      SetAlertMessages(warningAlerts, [
-        {
-          index: 0n,
-          message: `图片验证码刷新失败: ${why.code} ${why.message}`,
-        },
-      ]);
+      message.Error(`图片验证码刷新失败: ${why.code} ${why.message}`);
     }
   );
 };
@@ -277,22 +315,12 @@ const SendCode = () => {
                 }
               },
               why => {
-                SetAlertMessages(warningAlerts, [
-                  {
-                    index: 0n,
-                    message: `短信验证码获取失败:  ${why.message}`,
-                  },
-                ]);
+                message.Error(`短信验证码获取失败:  ${why.message}`);
               }
             );
           },
           why => {
-            SetAlertMessages(warningAlerts, [
-              {
-                index: 0n,
-                message: `短信验证码获取失败:  ${why.message}`,
-              },
-            ]);
+            message.Error(`短信验证码获取失败:  ${why.message}`);
           }
         );
       }
@@ -414,13 +442,7 @@ const SendCode = () => {
                 <Tab.Panels>
                   <Tab.Panel :unmount="false">
                     <div class="relative intro-x">
-                      <FormInput
-                        type="text"
-                        :autocomplete="autoComplete"
-                        v-model="formData.username"
-                        class="block px-4 py-3 login__input min-w-full xl:min-w-[350px] font-black"
-                        placeholder="系统账号"
-                      />
+                      <FormInput type="text" v-model="formData.username" class="block px-4 py-3 login__input min-w-full xl:min-w-[350px] font-black" placeholder="系统账号" />
                       <template v-if="errors.username.errors">
                         <div v-for="(error, index) in errors.username.errors" :key="index" class="mt-2 text-danger">
                           {{ error.message }}
@@ -429,7 +451,6 @@ const SendCode = () => {
                       <div class="relative">
                         <FormInput
                           type="password"
-                          :autocomplete="autoComplete"
                           v-model="formData.password"
                           id="field-password"
                           class="relative block font-black px-4 py-3 mt-4 login__input min-w-full xl:min-w-[350px] placeholder:text-sm dark:bg-darkmode-900"
@@ -445,14 +466,7 @@ const SendCode = () => {
                   </Tab.Panel>
                   <Tab.Panel :unmount="false">
                     <div class="relative intro-x">
-                      <FormInput
-                        type="text"
-                        name="phone_number"
-                        :autocomplete="autoComplete"
-                        v-model="formData.phone_number"
-                        class="block px-4 py-3 login__input min-w-full xl:min-w-[350px] font-black"
-                        placeholder="手机号码"
-                      />
+                      <FormInput type="text" name="phone_number" v-model="formData.phone_number" class="block px-4 py-3 login__input min-w-full xl:min-w-[350px] font-black" placeholder="手机号码" />
                       <template v-if="errors.phone_number.errors">
                         <div v-for="(error, index) in errors.phone_number.errors" :key="index" class="mt-2 text-danger">
                           {{ error.message }}
@@ -469,7 +483,6 @@ const SendCode = () => {
                       <div class="relative" v-if="!isVerifyCodeLogin">
                         <FormInput
                           type="password"
-                          :autocomplete="autoComplete"
                           v-model="formData.password"
                           id="field-password2"
                           class="relative block font-black px-4 py-3 login__input min-w-full xl:min-w-[350px] placeholder:text-sm dark:bg-darkmode-900"
@@ -483,7 +496,7 @@ const SendCode = () => {
                       </div>
                       <div v-else>
                         <div class="relative flex flex-row md:flex-row md:items-center mb-2 intro-x">
-                          <FormInput type="text" :autocomplete="autoComplete" class="block px-4 py-3 login__input font-black" placeholder="图片验证码" v-model="formData.captcha" />
+                          <FormInput type="text" class="block px-4 py-3 login__input font-black" placeholder="图片验证码" v-model="formData.captcha" />
                           <div v-if="captchaUrl?.captchaImage">
                             <img class="w-[8rem] align-top xl:mt-0 ml-2 shadow" :src="captchaUrl?.captchaImage" @click="RefreshCaptcha" />
                           </div>
@@ -496,7 +509,7 @@ const SendCode = () => {
                           </div>
                         </template>
                         <div class="relative flex flex-row md:flex-row md:items-center my-3 intro-x">
-                          <FormInput type="text" :autocomplete="autoComplete" class="block px-4 py-3 login__input font-black" placeholder="短信验证码" v-model="formData.code" />
+                          <FormInput type="text" class="block px-4 py-3 login__input font-black" placeholder="短信验证码" v-model="formData.code" />
                           <Button
                             variant="outline-primary"
                             class="align-top w-[10.5rem] xl:mt-0 ml-2"
@@ -535,7 +548,7 @@ const SendCode = () => {
             </div>
             <div class="flex mt-4 text-xs intro-x text-slate-600 dark:text-slate-500 sm:text-sm">
               <div class="flex items-center mr-auto">
-                <FormCheck.Input id="remember-me" type="checkbox" class="mr-2 border" @click="toggleRememberAccount" />
+                <FormCheck.Input id="remember-me" type="checkbox" class="mr-2 border" v-model="rememberAccount" />
                 <label class="cursor-pointer select-none" htmlFor="remember-me">记住我的账号信息</label>
               </div>
               <a
