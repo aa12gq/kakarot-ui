@@ -1,38 +1,38 @@
 <template>
-  <VueDatePicker v-model="internalDateValue" v-bind="datePickerProps" />
+  <VueDatePicker v-model="internalDateValue" v-bind="datePickerProps" class="picker" />
 </template>
 
 <script setup>
-import { ref, watch, computed } from "vue";
-import VueDatePicker from "@vuepic/vue-datepicker";
-import "@vuepic/vue-datepicker/dist/main.css";
-import { format, isValid, parseISO } from "date-fns";
+import { ref, watch, computed } from 'vue';
+import VueDatePicker from '@vuepic/vue-datepicker';
+import '@vuepic/vue-datepicker/dist/main.css';
+import { format, isValid, parseISO } from 'date-fns';
 
 const props = defineProps({
   modelValue: String,
   type: {
     type: String,
-    default: "single", // 提供默认值
+    default: 'single', // 提供默认值
   },
   locale: {
     type: String,
-    default: "zh-CN",
+    default: 'zh-CN',
   },
   placeholder: {
     type: String,
-    default: "请选择日期",
+    default: '请选择日期',
   },
   selectText: {
     type: String,
-    default: "确定",
+    default: '确定',
   },
   cancelText: {
     type: String,
-    default: "取消",
+    default: '取消',
   },
   nowButtonLabel: {
     type: String,
-    default: "当前",
+    default: '当前',
   },
   initializeWithNull: {
     type: Boolean,
@@ -40,26 +40,26 @@ const props = defineProps({
   },
 });
 
-const emit = defineEmits(["update:modelValue"]);
+const emit = defineEmits(['update:modelValue']);
 
 const internalDateValue = ref(props.initializeWithNull ? null : new Date());
 
 const formatDate = computed(() => {
   switch (props.type) {
-    case "single":
-      return "yyyy-MM-dd HH:mm";
-    case "range":
-      return "yyyy-MM-dd HH:mm - yyyy-MM-dd HH:mm";
-    case "month":
-      return "MM/yyyy";
-    case "time":
-      return "HH:mm";
-    case "timerange":
-      return "HH:mm - HH:mm";
-    case "week":
-      return "RR-yyyy";
+    case 'single':
+      return 'yyyy-MM-dd HH:mm';
+    case 'range':
+      return 'yyyy-MM-dd HH:mm - yyyy-MM-dd HH:mm';
+    case 'month':
+      return 'MM/yyyy';
+    case 'time':
+      return 'HH:mm';
+    case 'timerange':
+      return 'HH:mm - HH:mm';
+    case 'week':
+      return 'RR-yyyy';
     default:
-      return "yyyy-MM-dd HH:mm";
+      return 'yyyy-MM-dd HH:mm';
   }
 });
 
@@ -69,7 +69,7 @@ function handleIncomingDate(value) {
     if (isValid(date)) {
       internalDateValue.value = date; // 设置解析后的日期
     } else {
-      console.error("无效的日期值:", value);
+      console.error('无效的日期值:', value);
       internalDateValue.value = null;
     }
   } else {
@@ -81,14 +81,14 @@ watch(() => props.modelValue, handleIncomingDate, { immediate: true });
 
 watch(
   internalDateValue,
-  (newValue) => {
+  newValue => {
     if (newValue && isValid(newValue)) {
       const formatted = format(newValue, formatDate.value);
-      emit("update:modelValue", formatted);
+      emit('update:modelValue', formatted);
     } else if (newValue === null) {
-      emit("update:modelValue", null); // 如果值为 null，发射 null
+      emit('update:modelValue', null); // 如果值为 null，发射 null
     } else {
-      console.error("尝试格式化无效的日期");
+      console.error('尝试格式化无效的日期');
     }
   },
   { immediate: true }
@@ -100,3 +100,9 @@ const datePickerProps = computed(() => ({
   type: props.type, // 显式提供 type 属性
 }));
 </script>
+<style scoped>
+.picker :deep(.dp__input) {
+  background-color: rgb(var(--color-darkmode-600) / var(--tw-bg-opacity)) !important;
+  @apply dark:!text-gray-200;
+}
+</style>
